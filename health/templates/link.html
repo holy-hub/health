@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- All generales link css templates -->
+        <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static "" %}">
+
+        <!-- other link css templates-->
+        {% block stylesheet %}{% endblock stylesheet %}
+        <title>Health | {{ title }}</title>
+    </head>
+    <body>
+        <main id="app">
+            {% block body %}{% endblock body %}
+        </main>
+
+        <!-- All générale Javascript for all templates -->
+        <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static "" %}"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#app').hide().fadeIn('slow');
+            })
+        </script>
+        <!-- other javascript own at templates -->
+        {% block javascript %}{% endblock javascript %}
+    </body>
+</html>
