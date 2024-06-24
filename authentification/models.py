@@ -14,6 +14,22 @@ class Utilisateur(models.Model):
     
     def __init__(self):
         return f"{self.user.username} est un {self.status}."
+
+    @property
+    def is_pharmacien(self):
+        return self.status == "pharmacien"
+
+    @property
+    def is_medecin(self):
+        return self.status == "medecin"
+
+    @property
+    def is_patient(self):
+        return self.status == "patient"
+    
+    @property
+    def is_deleted(self):
+        return self.deleted
     
 class Archive:
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
