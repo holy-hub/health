@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .authentification import *
+from .authentification.models import *
 
 # Create your views here.
 def chat_room(request, room_name):
