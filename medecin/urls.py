@@ -1,6 +1,36 @@
-from django.urls    import path
-from .views         import *
+from django.urls import path
+from .views import *
 
 urlpatterns = [
-    path('', name=''),
+    path('dashboard/', dashboard, name='dashboard_m'),
+    path('hospital/create/', creaHopital, name='create_hos'),
+    path('hospital/read/hos-<str:hos_name>-view/', readHopital, name='read_hos'),
+    path('hospital/read/all/', readAllHopital, name='readAll_hos'),
+    path('hospital/update/hos-<str:hos_name>-view/', updHopital, name='update_hos'),
+    path('hospital/delete/hos-<str:hos_name>-view/', delHopital, name='delete_hos'),
+    path('advice/create/', creaAdvice, name='create_adv'),
+    path('advice/read/adv-<str:adv_name>-view/', readAdvice, name='read_adv'),
+    path('advice/read/all/', readAllAdvice, name='readAll_adv'),
+    path('advice/update/adv-<str:adv_name>-view/', updAdvice, name='update_adv'),
+    path('advice/delete/adv-<str:adv_name>-view/', delAdvice, name='delete_adv'),
+    path('consigne/create/', creaConsigne, name='create_csg'),
+    path('consigne/read/csg-<str:csg_name>-view/', readConsigne, name='read_csg'),
+    path('consigne/read/all/', readAllConsigne, name='readAll_csg'),
+    path('consigne/update/csg-<str:csg_name>-view/', updConsigne, name='update_csg'),
+    path('consigne/delete/csg-<str:csg_name>-view/', delConsigne, name='delete_csg'),
+    path('prescription/create/', creaPrescription, name='create_prsc'),
+    path('prescription/read/prsc-<str:prsc_name>-view/', readPrescription, name='read_prsc'),
+    path('prescription/read/all/', readAllPrescription, name='readAll_prsc'),
+    path('prescription/update/prsc-<str:prsc_name>-view/', updPrescription, name='update_prsc'),
+    path('prescription/delete/prsc-<str:prsc_name>-view/', delPrescription, name='delete_prsc'),
+    path('speciality/create/', creaSpeciality, name='create_spc'),
+    path('speciality/read/spc-<str:spc_name>-view/', readSpeciality, name='read_spc'),
+    path('speciality/read/all/', readAllSpeciality, name='readAll_spc'),
+    path('speciality/update/spc-<str:spc_name>-view/', updSpeciality, name='update_spc'),
+    path('speciality/delete/spc-<str:spc_name>-view/', delSpeciality, name='delete_spc'),
+    path('speciality/sub/create/', creaSubSpeciality, name='create_subSpc'),
+    path('speciality/sub/read/subSpc-<str:subSpc_name>-view/', readSubSpeciality, name='read_subSpc'),
+    path('speciality/sub/read/all/', readAllSubSpeciality, name='readAll_subSpc'),
+    path('speciality/sub/update/subSpc-<str:subSpc_name>-view/', updSubSpeciality, name='update_subSpc'),
+    path('speciality/sub/delete/subSpc-<str:subSpc_name>-view/', delSubSpeciality, name='delete_subSpc'),
 ]

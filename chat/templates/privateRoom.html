@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h2>Private Messages</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <select id="private-message-receiver">
+                <option value="">Select a user</option>
+                {% for user in users %}
+                <option value="{{ user.username }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>        
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" id="private-message-receiver-chat"></div>
+                <div class="card-body">
+                    <div id="private-chat-log"></div>
+                </div>
+                <div class="card-footer">
+                    <input id="private-message-input" type="text" size="100"><button id="private-message-submit">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% block script %}
+    <script>
+        $(document).ready(function() {
+            const roomName = JSON.parse($('#room-name').text());
+    
+            const chatSocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/chat/group/'
+                + roomName
+                + '/'
+            );
+    
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                $('#chat-log').append(data.username + ': ' + data.message + '\n');
+            };
+    
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+    
+            $('#private-message-input').focus();
+            $('#private-message-input').keyup(function(e) {
+                if (e.keyCode === 13) {
+                    $('#private-message-submit').click();
+                }
+            });
+    
+            $('#private-message-submit').click(function(e) {
+                const receiverInput = $('#private-message-receiver');
+                const receiverChat = $('#private-message-receiver-chat');
+                const receiver = receiverInput.val();
+                const messageInput = $('#private-message-input');
+                const message = messageInput.val();
+                receiverChat.val() = receiver;
+        
+                if (receiver && message) {
+                    chatSocket.send(JSON.stringify({
+                        'message': message,
+                        'sender': currentUser,
+                        'receiver': receiver
+                    }));
+                    messageInput.val('');
+                }
+            });
+        });
+    </script>
+    {% endblock script %}
+{% endblock content %}

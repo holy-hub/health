@@ -14,7 +14,7 @@
     </head>
     <body>
         <main id="app">
-            {% block body %}{% endblock body %}
+            {% block body %}{% endblock %}
         </main>
 
         <!-- All générale Javascript for all templates -->
@@ -27,7 +27,9 @@
                 $('#app').hide().fadeIn('slow');
             })
         </script>
-        <!-- other javascript own at templates -->
+        <!-- other vendor javascript own at templates -->
         {% block javascript %}{% endblock javascript %}
+        <!-- JQuery script here -->
+        {% block script %}{% endblock script %}
     </body>
 </html>

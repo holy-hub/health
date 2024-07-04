@@ -1,27 +1,27 @@
-from django.contrib.auth            import authenticate, login, logout
-from django.shortcuts               import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.core.mail               import send_mail
-from django.contrib.auth.models     import User
-from .models                        import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .models import *
 
 # Create your views here.
 def login(request):
     if request.method == 'POST':
-        email    = request.POST.get('email', '')
+        email = request.POST.get('email', '')
         password = request.POST.get('password', '')
-        
+
         user = authenticate(email=email, password=password)
         if user is not None:
-            login(request, user)
-            user = Utilisateur.objects.get('email')
+            user = User.objects.get(email='email')
+            user = Utilisateur.objects.get(user=user)
             if user.deleted:
-                pass
+                return redirect("home")
             else:
-                if user.status == "medecin": return redirect('')
-                elif user.status == "pharmacien": return redirect('')
-                else: return redirect('')
-    return render(request, 'login.html', {'title': 'Connexion d\'utilisateur'})
+                login(request, user)
+                if user.status == "medecin": return redirect('dashboard_m')
+                elif user.status == "pharmacien": return redirect('dashboard_ph')
+                else: return redirect('dashboard_p')
 
 @login_required
 def out(request):
@@ -35,11 +35,11 @@ def register(request):
         username  = request.POST.get('username', '')
         email     = request.POST.get('email', '')
         password  = request.POST.get('password', '')
-        
+
         mobile = request.POST.get('mobile', '')
         status = request.POST.get('status', '')
         preuve = request.POST.get('preuve', '')
-        
+
         user = User.objects.create(firstname=firstname, lastname=lastname, username=username, email=email, password=password)
         utilisateur = Utilisateur.objects.create(user=user, mobile=mobile, status=status, preuve=preuve)
         user.save()
@@ -50,8 +50,14 @@ def register(request):
             'healthy@health@gmail.com', 
             [email]
         )
-        return redirect('login')
-    return render(request, 'register.html', {'title': 'Inscription d\'utilisateur'})
+        return redirect('log')
+
+@login_required
+def auth(request):
+    context = {
+        'title': 'Authentification',
+    }
+    return render(request, 'register.html', context)
 
 @login_required
 def deleteAccount(request):
