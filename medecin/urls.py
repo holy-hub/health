@@ -28,9 +28,4 @@ urlpatterns = [
     path('speciality/read/all/', readAllSpeciality, name='readAll_spc'),
     path('speciality/update/spc-<str:spc_name>-view/', updSpeciality, name='update_spc'),
     path('speciality/delete/spc-<str:spc_name>-view/', delSpeciality, name='delete_spc'),
-    path('speciality/sub/create/', creaSubSpeciality, name='create_subSpc'),
-    path('speciality/sub/read/subSpc-<str:subSpc_name>-view/', readSubSpeciality, name='read_subSpc'),
-    path('speciality/sub/read/all/', readAllSubSpeciality, name='readAll_subSpc'),
-    path('speciality/sub/update/subSpc-<str:subSpc_name>-view/', updSubSpeciality, name='update_subSpc'),
-    path('speciality/sub/delete/subSpc-<str:subSpc_name>-view/', delSubSpeciality, name='delete_subSpc'),
 ]

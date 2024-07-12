@@ -13,7 +13,7 @@ def dashboard(request):
         'title': 'Utilisateur ', # + request.user.username,
         # 'nombres-de-rdv': nb_rdv,
     }
-    return render(request, 'dashboard.html', context)
+    return render(request, 'patient/dashboard.html', context)
 
 @login_required
 def my_appointement(request):
@@ -22,7 +22,7 @@ def my_appointement(request):
         'title': 'Utilisateur ' + request.user.user.username,
         'rdvs': rdv,
     }
-    return render(request, 'my_appointement.html', context)
+    return render(request, 'patient/my_appointement.html', context)
 
 def ask_appointement(request, med_id):
     if request.method == 'POST':
@@ -36,7 +36,7 @@ def prescription(request):
         'title': 'Mes ordonnances',
         'ordonnances': ordonnances,
     }
-    return render(request, 'my_prescription.html', context)
+    return render(request, 'patient/my_prescription.html', context)
 
 @login_required
 def prescription_name(request, prsc_name):
@@ -45,4 +45,4 @@ def prescription_name(request, prsc_name):
         'title': 'Ordonnance ' + ordonnance.title,
         'ordonnances': ordonnance,
     }
-    return render(request, 'myOne_prescription.html', context)
+    return render(request, 'patient/myOne_prescription.html', context)
