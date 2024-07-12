@@ -49,12 +49,11 @@ class Pharmacie(models.Model):
     nom = models.CharField(max_length=250, verbose_name="Nom de la pharmacie.")
     description = models.TextField(verbose_name="Situer la pharmacie", null=True)
     location = models.URLField(max_length=200, verbose_name="Coordonnées de la pharmacie.", null=True)
-    pharmacien = models.ForeignKey('authentification.Utilisateur', related_name='pharmacies', verbose_name="Proprietaire de la pharmacie.", on_delete=models.CASCADE)
     medications = models.ManyToManyField(Medication, verbose_name="Médicaments liés à la pharmacie")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.pharmacien.user.username} proprietaire de la pharmacie {self.nom}"
+        return f"{self.pharmacien.username} proprietaire de la pharmacie {self.nom}"
 
     def save(self, *args, **kwargs):
         if self.pharmacien.is_pharmacien:

@@ -22,7 +22,7 @@ urlpatterns = [
     path('health/healthy/', admin.site.urls),
     path('', main_home, name='home'),
     path('health/setting/', setting, name='setting'),
-    path('auth/', include('authentification.urls')),
+    path('accounts/', include('authentification.urls')),
     path('chat/', include('chat.urls')),
     path('medecin/', include('medecin.urls')),
     path('patient/', include('patient.urls')),

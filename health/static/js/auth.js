@@ -1,13 +1,8 @@
-$(document).ready(function () {
-    const container = $('#container');
-    const registerBtn = $('#register');
-    const loginBtn = $('#login');
-
-    registerBtn.click(function() {
-        container.addClass("active");
+$(document).ready(function() {
+    const switchers = $('.switcher');
+  
+    switchers.on('click', function() {
+      switchers.parent().removeClass('is-active');
+      $(this).parent().addClass('is-active');
     });
-
-    loginBtn.click(function() {
-        container.removeClass("active");
-    });
-});
+  });

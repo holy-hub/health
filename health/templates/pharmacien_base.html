@@ -1,4 +1,7 @@
-<!-- Squelette des pages du pharmacien-->
-{% extends "link.html" %}
+<!-- Le Squelette des pages du pharmacien-->
+{% extends 'link.html' %}
+{% load static %}
 
-{% block body %}{% endblock body %}
+{% block body %}
+  {% block content %}{% endblock %}
+{% endblock %}

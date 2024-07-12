@@ -1,4 +1,51 @@
 <!-- Le Squelette des pages du patient ou visiteur -->
-{% extends "link.html" %}
+{% extends 'link.html' %}
+{% load static %}
 
-{% block body %}{% endblock body %}
+{% block style %}
+{% endblock %}
+
+{% block body %}
+<div class="offcanvas offcanvas-start" id="demo">
+  <div class="offcanvas-header">
+    <h1 class="offcanvas-title">Heading</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <p>Some text lorem ipsum.</p>
+    <p>Some text lorem ipsum.</p>
+    <p>Some text lorem ipsum.</p>
+    <button class="btn btn-secondary" type="button">A Button</button>
+  </div>
+</div>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">
+      Open <i class="fas fa-menu"></i>
+    </button>
+    <a class="navbar-brand" href="javascript:void(0)">Me</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mynavbar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)">Link</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="text" placeholder="Search">
+        <button class="btn btn-primary" type="button">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+  {% block content %}{% endblock %}
+{% endblock %}

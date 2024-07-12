@@ -1,35 +1,26 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
-from pharmacie.models import Pharmacie
-from medecin.models import SubSpeciality
 from django.db import models
+from time import strftime
 
 # Create your models here.
-class Utilisateur(models.Model):
-    STATUS_CHOICE = (('patient', 'PATIENT'), ('medecin', 'MEDECIN'), ('pharmacien', 'PHARMACIEN'),)
-    user = models.ForeignKey(User, verbose_name="", on_delete=models.CASCADE)
+class Utilisateur(User):
+    SEX_CHOICES = (
+        ('M', 'MASCULIN'),
+        ('F', 'FEMININ'),
+        ('BI', 'BISEXUEL'),
+        ('N-G', 'NON-GENRE'),
+    )
+    STATUS_CHOICE = (('patient', 'PATIENT'), ('medecin', 'MEDECIN'), ('pharmacien', 'PHARMACIEN'))
     mobile = models.CharField(max_length=20, unique=True)
+    sexe = models.CharField(max_length=20, choices=SEX_CHOICES, default=SEX_CHOICES[0])
+    address = models.CharField(max_length=20)
     status = models.CharField(max_length=10, choices=STATUS_CHOICE, default=STATUS_CHOICE[0])
-    preuve = models.FileField(upload_to="health/static/documents/", max_length=255)
     deleted = models.BooleanField(default=False)
 
-    subSpeciality = models.ForeignKey('medecin.SubSpeciality', verbose_name="Specialite du medecin", null=True, on_delete=models.CASCADE)
-    pharmacie = models.ForeignKey('pharmacie.Pharmacie', verbose_name="Pharmacie", null=True, on_delete=models.CASCADE)
-
-
     def __str__(self):
-        return f"{self.user.username} est un {self.status}."
-
-    def save(self, *args, **kwargs):
-        if self.status == self.STATUS_CHOICE[2]:
-            self.subSpeciality, _ = SubSpeciality.objects.get_or_create(nom=self.speciality)
-        elif self.status == self.STATUS_CHOICE[1]:
-            self.subSpeciality, _ = SubSpeciality.objects.get_or_create(nom="Pharmacien")
-            self.pharmacie, _ = Pharmacie.objects.get_or_create(nom=self.pharmacie)
-        else:
-            self.subSpeciality, _ = SubSpeciality.objects.get_or_create(nom="Patient")
-        super().save(*args, **kwargs)
+        return f"{self.first_name} est un {self.status}."
 
     def is_pharmacien(self):
         return self.status == self.STATUS_CHOICE[2]
@@ -42,14 +33,49 @@ class Utilisateur(models.Model):
 
     def is_deleted(self):
         return self.deleted
+    
+    def set_mededecin(self):
+        self.status = self.STATUS_CHOICE[1]
+
+    def set_pharmacien(self):
+        self.status = self.STATUS_CHOICE[2]
 
     def archive(self):
         Archive.objects.create(content_object=self, archived_by=self).save()
 
-    def my_pharmacie(self):
-        if self.is_pharmacien:
-            return Pharmacie.objects.filter(pharmacien=self).order_by('created_at').all()
-        return []
+class Pharmacien(Utilisateur):
+    preuvePharmacien = models.FileField(upload_to="health/static/Pharmacien/")
+    pharmacie = models.ForeignKey('pharmacie.Pharmacie', verbose_name="Pharmacie", null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Pharmacien {self.first_name}"
+
+    def getStatus(self):
+        self.status = self.STATUS_CHOICE[2]
+        return self.status
+
+class Medecin(Utilisateur):
+    preuveMedecin = models.FileField(upload_to='health/static/Medecin/')
+    speciality = models.ForeignKey("medecin.Speciality", verbose_name="Specialite du medecin", null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Medecin {self.first_name}"
+
+    def getStatus(self):
+        self.status = self.STATUS_CHOICE[1]
+        return self.status
+
+class Patient(Utilisateur):
+    assurance_medicale = models.BooleanField(default=False)
+    code_assurance = models.CharField(max_length=50, blank=True)
+    personne_a_prevenir = models.CharField(max_length=50, blank=True)
+    tel_personne_a_prevenir = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return f"Patient {self.first_name}"
+
+    def my_carnet(self):
+        pass
 
 class Archive:
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -59,4 +85,4 @@ class Archive:
     archived_by = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Archived {self.content_type.name} at {self.archived_at} by {self.archived_by.username}."
+        return f"Archive {self.content_type.name} at {strftime(self.archived_at)} by {self.archived_by.first_name}."

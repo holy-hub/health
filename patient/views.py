@@ -5,13 +5,13 @@ from .models import *
 
 # Create your views here.
 # PATIENT
-@login_required
+# @login_required
 def dashboard(request):
-    rdv = Appointement.objects.filter(patient=request.user).all()
-    nb_rdv = len(rdv)
+    # rdv = Appointement.objects.filter(patient=request.user).all()
+    # nb_rdv = len(rdv)
     context = {
-        'title': 'Utilisateur ' + request.user.user.username,
-        'nombres-de-rdv': nb_rdv,
+        'title': 'Utilisateur ', # + request.user.username,
+        # 'nombres-de-rdv': nb_rdv,
     }
     return render(request, 'dashboard.html', context)
 
@@ -24,10 +24,10 @@ def my_appointement(request):
     }
     return render(request, 'my_appointement.html', context)
 
-def ask_appointement(request, doc_id):
+def ask_appointement(request, med_id):
     if request.method == 'POST':
-        medecin = Utilisateur.objects.get(pk=doc_id)
-        Appointement.objects.get_or_create(patient=request.user, medecin=medecin).save()
+        medecin = Medecin.objects.get(pk=med_id)
+        Appointement.objects.get_or_create(patient=request.user, medecin=medecin)
 
 @login_required
 def prescription(request):
