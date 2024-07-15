@@ -2,4 +2,381 @@
 {% load static %}
 
 {% block content %}
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="{% url "home" %}">TOGO SANTE</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="{% url "home" %}" class="logo me-auto"><img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="#services">Informations</a></li>
+          <li><a class="nav-link scrollto" href="#doctors">Docteurs</a></li>
+          <li><a class="nav-link scrollto" href="#gallery">Gallerie</a></li>
+          <li><a class="nav-link scrollto" href="#about">Nos Services</a></li>
+          <li><a class="nav-link scrollto" href="{% url "log" %}">Se Connecter</a></li>
+        <a href="rdv.html" class="appointment-btn scrollto"><span class="d-none p-1 d-md-inline">Contacte</a>
+      </nav><!--.navbar -->
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="container">
+      <h1>BIENVENUE SUR TOGO SANTE</h1>
+      <h2 class="typed-text-output d-inline"></h2>
+      <h2 class="typed-text d-none">Votre plateforme togolaise qui vous aide à prendre soin de vous à tout moment, Votre santé en un clic : l'application qui prend soin de vous !, Notre application - une meilleure qualité de vie : explorez notre univers santé., Notre application - mille conseils santé : votre alliée pour une vie équilibrée.</h2><br>
+      <div class="d-flex">
+        <a href="#about" class="btn-get-started scrollto">En Savoir Plus</a>
+        <div>
+          <div class="searchInp mt-4">
+            <input type="text" name="text" class="input" required="" placeholder="Type to search...">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                <title>Search</title>
+                <path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path>
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> <!-- End Hero -->
+
+  <main id="main">
+    <!-- ======= Why Us Section ======= -->
+    <section id="why-us" class="why-us">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="content">
+              <h3>QUE SAVOIR SUR LA FIEVRE TYPHOIDE</h3>
+              <p>La fièvre typhoïde est une maladie infectieuse causée par la bactérie Salmonella enterica sérotype Typhi.<span class="hidden-content"> Elle se transmet généralement par la consommation d'aliments ou d'eau contaminés par les matières fécales ou l'urine d'une personne infectée.</span></p>
+              <div class="text-center">
+                <a href="#faq" class="more-btn">En Savoir plus <i class="bx bx-chevron-right"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="icon-boxes d-flex flex-column justify-content-center">
+              <div class="row">
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box mt-4 mt-xl-0">
+                    <h4>PREVENTION</h4>
+                    <i class="bx bx-receipt"></i>
+                    <p>Elle repose sur l'adoption de bonnes pratiques d'hygiène,
+                    <span class="hidden-content"> telles que se laver les mains régulièrement, consommer de l'eau potable, manger des aliments bien cuits, éviter les aliments de rue non hygiéniques et se faire vacciner contre la fièvre typhoïde si vous vous rendez dans une zone à risque élevé.</span></p>
+                    <a href="#" id="voir-plus" class="nav-link text-primary">Voir plus</a>
+                  </div>
+                </div>
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box mt-4 mt-xl-0">
+                    <h4>SYMPTOMES</h4>
+                    <i class="bx bx-cube-alt"></i>
+                    <p>Ils comprennent une forte fièvre persistante, des maux de tête,<span class="hidden-content"> une fatigue intense, des douleurs abdominales, une perte d'appétit, une constipation, une éruption cutanée rose et des douleurs musculaires.</span></p>
+                  </div>
+                </div>
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box mt-4 mt-xl-0">
+                    <h4>CONSEQUENCES</h4>
+                    <i class="bx bx-images"></i>
+                    <p>Le diagnostic de la fièvre typhoïde se fait généralement par des tests sanguins<span class="hidden-content">pour détecter la présence de l'antigène de Salmonella Typhi ou de ses anticorps. Le traitement de la fièvre typhoïde repose sur l'administration d'antibiotiques appropriés, qui aident à éliminer la bactérie de l'organisme.</span></p>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End .content-->
+          </div>
+        </div>
+      </div>
+    </section><!-- End Why Us Section -->
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
+      <div class="container">
+        <div class="section-title">
+          <h2>Conseils courants</h2>
+          <p>Nous pouvons vous donner quelques conseils généraux pour maintenir une bonne santé, mais veuillez noter que ces conseils ne remplacent pas les avis médicaux professionnels. Voici quelques recommandations habituelles:</p>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+            <div class="icon-box">
+              <div class="icon"><i class="fas fa-heartbeat"></i></div>
+              <h4><a href="">Maintenez une alimentation équilibrée</a></h4>
+              <p>Consommez une variété d'aliments nutritifs et limitez votre consommation de sucres ajoutés, de sel et de gras saturés.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+            <div class="icon-box">
+              <div class="icon"><i class="fas fa-pills"></i></div>
+              <h4><a href="">Faites de l'exercice régulièrement</a></h4>
+              <p>Essayez de faire au moins 150 minutes d'activité physique modérée ou 75 minutes d'activité intense chaque semaine notamment la marche, la course, la natation ou le vélo.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
+            <div class="icon-box">
+              <div class="icon"><i class="fas fa-hospital-user"></i></div>
+              <h4><a href="">Faites des contrôles de santé réguliers</a></h4>
+              <p>Consultez votre médecin régulièrement pour des examens appropriés à votre âge et à votre sexe. N'hésitez pas à discuter de vos préoccupations ou symptômes avec un professionnel de la santé.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+            <div class="icon-box">
+              <div class="icon"><i class="fas fa-dna"></i></div>
+              <h4><a href="">Gérez le stress</a></h4>
+              <p>Trouvez des techniques de gestion du stress qui fonctionnent pour vous, comme le yoga ou d'autres activités relaxantes. Prenez le temps de vous détendre et de vous reposer.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+            <div class="icon-box">
+              <div class="icon"><i class="fas fa-wheelchair"></i></div>
+              <h4><a href="">Évitez les comportements à risque</a></h4>
+              <p>Évitez de fumer, de consommer de l'alcool et de prendre des drogues illicites. Protégez-vous également des infections en vous faisant vacciner et en pratiquant des rapports sexuels protégés.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+            <div class="icon-box">
+              <div class="icon"><i class="fas fa-notes-medical"></i></div>
+              <h4><a href="">Dormez suffisamment</a></h4>
+              <p>Un sommeil de qualité est essentiel pour maintenir une bonne santé. Essayez de dormir environ 7 à 8 heures par nuit et établissez une routine de sommeil régulière.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Services Section -->
+    
+    <!-- ======= Doctors Section ======= -->
+    <section id="doctors" class="doctors">
+      <div class="container">
+        <div class="section-title">
+          <h2>Docteurs</h2>
+          <p>Ils sont formés pour évaluer, diagnostiquer et traiter les maladies et les affections médicales. ils sont des professionnels de la santé dévoués qui travaillent pour promouvoir la santé, prévenir les maladies, ... et améliorer la qualité de vie de leurs patients.</p>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="member d-flex align-items-start">
+              <div class="pic"><img src="{% static 'assets/img/doctors/doctors-1.jpg' %}" class="img-fluid" alt=""></div>
+              <div class="member-info">
+                <h4>Walter White</h4>
+                <span>Chief Medical Officer</span>
+                <p>Explicabo voluptatem mollitia et repellat qui dolorum quasi</p>
+                <div class="social">
+                  <a href=""><i class="ri-twitter-fill"></i></a>
+                  <a href=""><i class="ri-facebook-fill"></i></a>
+                  <a href=""><i class="ri-instagram-fill"></i></a>
+                  <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-4 mt-lg-0">
+            <div class="member d-flex align-items-start">
+              <div class="pic"><img src="{% static 'assets/img/doctors/doctors-2.jpg' %}" class="img-fluid" alt=""></div>
+              <div class="member-info">
+                <h4>Sarah Jhonson</h4>
+                <span>Anesthesiologist</span>
+                <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
+                <div class="social">
+                  <a href=""><i class="ri-twitter-fill"></i></a>
+                  <a href=""><i class="ri-facebook-fill"></i></a>
+                  <a href=""><i class="ri-instagram-fill"></i></a>
+                  <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-4">
+            <div class="member d-flex align-items-start">
+              <div class="pic"><img src="{% static 'assets/img/doctors/doctors-3.jpg' %}" class="img-fluid" alt=""></div>
+              <div class="member-info">
+                <h4>William Anderson</h4>
+                <span>Cardiology</span>
+                <p>Quisquam facilis cum velit laborum corrupti fuga rerum quia</p>
+                <div class="social">
+                  <a href=""><i class="ri-twitter-fill"></i></a>
+                  <a href=""><i class="ri-facebook-fill"></i></a>
+                  <a href=""><i class="ri-instagram-fill"></i></a>
+                  <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-4">
+            <div class="member d-flex align-items-start">
+              <div class="pic"><img src="{% static 'assets/img/doctors/doctors-4.jpg' %}" class="img-fluid" alt=""></div>
+              <div class="member-info">
+                <h4>Amanda Jepson</h4>
+                <span>Neurosurgeon</span>
+                <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
+                <div class="social">
+                  <a href=""><i class="ri-twitter-fill"></i></a>
+                  <a href=""><i class="ri-facebook-fill"></i></a>
+                  <a href=""><i class="ri-instagram-fill"></i></a>
+                  <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Doctors Section -->
+
+    <!-- ======= Frequently Asked Questions Section ======= -->
+    <section id="faq" class="faq section-bg">
+      <div class="container">
+        <div class="section-title">
+          <h2>... Questions Frequemment posees ...</h2>
+          <p>Que vous soyez un patient cherchant des réponses à des préoccupations de santé ou un curieux désireux d'approfondir vos connaissances médicales, il est naturel de se poser fréquemment des questions. Les interrogations vont de la prévention des maladies à la gestion des affections médicales, en passant par les traitements disponibles et les dernières avancées de la recherche médicale.</p>
+        </div>
+        <div class="faq-list">
+          <ul>
+            <li data-aos="fade-up">
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse" data-bs-target="#faq-list-1">Quels sont les symptômes les plus courants de la grippe et comment puis-je les différencier d'un simple rhume ?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <div id="faq-list-1" class="collapse show" data-bs-parent=".faq-list">
+                <p>
+                  Les symptômes courants de la grippe comprennent la fièvre, les frissons, les maux de tête, les courbatures, la fatigue et la toux. La grippe se distingue souvent d'un simple rhume par l'apparition soudaine et la gravité des symptômes, ainsi que par la fièvre élevée.
+                </p>
+              </div>
+            </li>
+            <li data-aos="fade-up" data-aos-delay="100">
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed">Quels sont les facteurs de risque et les symptômes de la maladie d'Alzheimer ? Existe-t-il des mesures préventives pour réduire le risque de développer cette maladie ?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
+                <p>
+                  Les principaux facteurs de risque de la maladie d'Alzheimer sont l'âge avancé, les antécédents familiaux et les mutations génétiques. Les symptômes comprennent la perte de mémoire, la confusion, les changements d'humeur et les problèmes de langage. Bien qu'il n'y ait pas de moyen sûr de prévenir la maladie d'Alzheimer, certaines mesures telles que l'adoption d'un mode de vie sain, l'exercice régulier, une alimentation équilibrée et la stimulation mentale peuvent contribuer à réduire le risque.
+                </p>
+              </div>
+            </li>
+            <li data-aos="fade-up" data-aos-delay="200">
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">Quels sont les signes et les symptômes de la dépression ? Quelles sont les options de traitement disponibles, y compris les thérapies non médicamenteuses ?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
+                <p>
+                  Les symptômes de la dépression peuvent inclure une humeur dépressive persistante, une perte d'intérêt pour les activités habituelles, des changements de poids, des troubles du sommeil, une fatigue accrue et des pensées suicidaires. Les options de traitement comprennent la psychothérapie, les médicaments antidépresseurs, la thérapie cognitivo-comportementale (TCC) et d'autres approches thérapeutiques non médicamenteuses telles que l'exercice physique régulier et la méditation.
+                </p>
+              </div>
+            </li>
+            <li data-aos="fade-up" data-aos-delay="300">
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-4" class="collapsed">Qu'est-ce que la maladie cœliaque et quels sont les symptômes courants ? Quelles sont les principales sources de gluten et comment suivre un régime sans gluten ?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <div id="faq-list-4" class="collapse" data-bs-parent=".faq-list">
+                <p>
+                  La maladie cœliaque est une affection auto-immune dans laquelle la consommation de gluten endommage la muqueuse de l'intestin grêle. Les symptômes courants incluent des troubles digestifs tels que des douleurs abdominales, des ballonnements, des diarrhées et une perte de poids. Les principales sources de gluten sont le blé, l'orge et le seigle. Pour suivre un régime sans gluten, il est important d'éviter ces céréales et de se tourner vers des alternatives sans gluten telles que le riz, le maïs, le quinoa et les produits certifiés sans gluten.
+                </p>
+              </div>
+            </li>
+            <li data-aos="fade-up" data-aos-delay="400">
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-5" class="collapsed">Quels sont les signes d'une crise cardiaque et comment réagir en cas d'urgence cardiovasculaire ? Quelles sont les stratégies de prévention des maladies cardiaques, telles que l'adoption d'un mode de vie sain et le contrôle des facteurs de risque tels que l'hypertension artérielle et le cholestérol élevé ?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
+                <p>
+                  Les signes courants d'une crise cardiaque comprennent une douleur thoracique intense ou une sensation d'oppression, une difficulté respiratoire, des nausées, des douleurs dans les bras ou la mâchoire, et des étourdissements. En cas d'urgence cardiovasculaire, il est essentiel d'appeler immédiatement les services d'urgence. Pour prévenir les maladies cardiaques, adopter un mode de vie sain est crucial. Cela comprend l'arrêt du tabac, une alimentation équilibrée, l'exercice régulier, la gestion du stress, le contrôle de l'hypertension artérielle et du cholestérol élevé, ainsi que le suivi régulier avec un professionnel de la santé.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section><!-- End Frequently Asked Questions Section -->
+
+    <!-- ======= Gallery Section ======= -->
+    <section id="gallery" class="gallery">
+      <div class="container">
+        <div class="section-title">
+          <h2>Gallerie</h2>
+          <p>Dans cet espace dédié, nous mettons en avant les réalisations inspirantes et les prouesses incroyables de personnes exceptionnelles. Explorez ces histoires captivantes qui repoussent les limites de ce que nous pensions possible, et laissez-vous inspirer par ces individus qui ont su transcender les obstacles pour atteindre des sommets inimaginables.</p>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row g-0">
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-1.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-1.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-2.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-2.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-3.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-3.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-4.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-4.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-5.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-5.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-6.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-6.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-7.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-7.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'assets/img/gallery/gallery-8.jpg' %}" class="galelry-lightbox">
+                <img src="{% static 'assets/img/gallery/gallery-8.jpg' %}" alt="" class="img-fluid">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Gallery Section -->
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-xl-5 col-lg-6 video-box d-flex justify-content-center align-items-stretch position-relative">
+            <a href="https://www.youtube.com/watch?v=jDDaplaOz7Q" class="glightbox play-btn mb-4"></a>
+          </div>
+          <div class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
+            <h3>Enim quis est voluptatibus aliquid consequatur fugiat</h3>
+            <p>Esse voluptas cumque vel exercitationem. Reiciendis est hic accusamus. Non ipsam et sed minima temporibus laudantium. Soluta voluptate sed facere corporis dolores excepturi. Libero laboriosam sint et id nulla tenetur. Suscipit aut voluptate.</p>
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-fingerprint"></i></div>
+              <h4 class="title"><a href="">Lorem Ipsum</a></h4>
+              <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
+            </div>
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-gift"></i></div>
+              <h4 class="title"><a href="">Nemo Enim</a></h4>
+              <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
+            </div>
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-atom"></i></div>
+              <h4 class="title"><a href="">Dine Pad</a></h4>
+              <p class="description">Explicabo est voluptatum asperiores consequatur magnam. Et veritatis odit. Sunt aut deserunt minus aut eligendi omnis</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End About Section -->
+
+  </main>
 {% endblock content %}

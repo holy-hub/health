@@ -22,6 +22,8 @@ urlpatterns = [
     path('health/healthy/', admin.site.urls),
     path('', main_home, name='home'),
     path('health/setting/', setting, name='setting'),
+    path('health/calendar/', calendar, name='calendar'),
+    path('health/coming-soon/', coming_soon, name='coming_soon'),
     path('accounts/', include('authentification.urls')),
     path('chat/', include('chat.urls')),
     path('medecin/', include('medecin.urls')),

@@ -2,7 +2,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
 from django.db import models
-from time import strftime
 
 # Create your models here.
 class Utilisateur(User):
@@ -18,6 +17,7 @@ class Utilisateur(User):
     address = models.CharField(max_length=20)
     status = models.CharField(max_length=10, choices=STATUS_CHOICE, default=STATUS_CHOICE[0])
     deleted = models.BooleanField(default=False)
+    image = models.FileField(upload_to="static/adminLTE/img/profile/", max_length=255, blank=True, default="static/adminLTE/img/avatar5.png")
 
     def __str__(self):
         return f"{self.first_name} est un {self.status}."
@@ -50,9 +50,9 @@ class Pharmacien(Utilisateur):
     def __str__(self):
         return f"Pharmacien {self.first_name}"
 
-    def getStatus(self):
+    def save(self, *args, **kwargs):
         self.status = self.STATUS_CHOICE[2]
-        return self.status
+        super().save(*args, **kwargs)
 
 class Medecin(Utilisateur):
     preuveMedecin = models.FileField(upload_to='health/static/Medecin/')
@@ -61,21 +61,19 @@ class Medecin(Utilisateur):
     def __str__(self):
         return f"Medecin {self.first_name}"
 
-    def getStatus(self):
+    def save(self, *args, **kwargs):
         self.status = self.STATUS_CHOICE[1]
-        return self.status
+        super().save(*args, **kwargs)
 
 class Patient(Utilisateur):
+    profession = models.CharField(verbose_name="Profession du Patient", default="survivant", max_length=50)
     assurance_medicale = models.BooleanField(default=False)
     code_assurance = models.CharField(max_length=50, blank=True)
     personne_a_prevenir = models.CharField(max_length=50, blank=True)
     tel_personne_a_prevenir = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return f"Patient {self.first_name}"
-
-    def my_carnet(self):
-        pass
+        return f"Patient { self.first_name }"
 
 class Archive:
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -85,4 +83,6 @@ class Archive:
     archived_by = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Archive {self.content_type.name} at {strftime(self.archived_at)} by {self.archived_by.first_name}."
+        return f"Archive {self.content_type.name} at {self.archived_at.strftime('%Y, %B %d, %A')} by {self.archived_by.first_name}."
+
+    

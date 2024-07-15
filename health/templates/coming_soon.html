@@ -1,0 +1,48 @@
+{% extends 'link.html' %}
+
+{% block stylesheet %}
+<style>
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #e02130;
+        overflow: hidden;
+    }
+
+    h1 {
+        text-align: center;
+        text-transform: uppercase;
+        color: #fff;
+        font-family: arial;
+        font-size: 6rem;
+        line-height: 6rem;
+        letter-spacing: 10px;
+        text-shadow: 0 1px 0 #efefef, 0 2px 0 #efefef, 0 3px 0 #efefef, 0 4px 0 #efefef, 0 30px 5px rgba(0, 0, 0, 0.1);
+        animation: swing 3s linear infinite alternate;
+    }
+
+    @keyframes swing {
+        from {
+            transform: rotate(5deg);
+        }
+
+        to {
+            transform: rotate(-5deg);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block %}
+<h1>Coming <br>Soon!</h1>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    setTimeout(function() {
+        window.location.href = "{% url 'redirection' request.user.first_name %}";
+    }, 60000); // 60000 millisecondes = 1 minutes
+</script>
+{% endblock %}

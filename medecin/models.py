@@ -15,7 +15,7 @@ class Hopital(models.Model):
         return f"{self.nom} situe a l'adresse {self.adresse}."
 
     def add_medecin(self, user):
-        if user.is_medecin:
+        if isinstance(user, Medecin):
             self.medecins.add(user)
     
     def delete_medcin(self, id):
@@ -79,7 +79,7 @@ class Prescription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.medecin.username} prescrit cette ordonnance au patient #{self.patient.user.username} ayant une temperature de {self.temperature}*C."
+        return f"{self.medecin.username} prescrit cette ordonnance au patient #{self.patient.username} ayant une temperature de {self.temperature}*C."
 
     def save(self, *args, **kwargs):
         if self.medecin.is_medecin and self.patient.is_patient:
@@ -113,6 +113,7 @@ class Traitement(models.Model):
     date_traitement = models.DateTimeField()
     price = models.FloatField()
     chambre = models.ForeignKey(Chambre, verbose_name="", on_delete=models.CASCADE)
+    prixTotal = models.FloatField(blank=True, default=0)
 
     class Meta:
         verbose_name = "Traitement"
@@ -123,8 +124,8 @@ class Traitement(models.Model):
             super().save(*args, **kwargs)
 
     def price_total(self):
-        price = self.price + self.chambre.price
-        return price
+        self.prixTotal = self.price + self.chambre.price
+        return self.prixTotal
 
 class ExamenBiologique(Traitement):
     designation = models.CharField(max_length=250)
@@ -135,12 +136,26 @@ class Chirurgie(Traitement):
     chirurgien = models.CharField(max_length=50)
     anesthesiste = models.CharField(max_length=50)
 
-class Facture(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    prix_total = models.FloatField(default=0)
+class Consultation(models.Model):
+    medecin = models.ForeignKey(Medecin, related_name='consultations_medecin', on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, related_name='consultations_patient', on_delete=models.CASCADE)
+    date_consultation = models.DateTimeField()
+    motif = models.TextField()
+    diagnostic = models.TextField()
+    poids = models.FloatField( default=0,)
+    taille = models.FloatField( default=1.0,)
+    rdv = models.ForeignKey(Appointement, verbose_name="", on_delete=models.CASCADE)
+    typeConsult = models.CharField(max_length=50)
+    price = models.FloatField(default=0,)
+    temperature = models.FloatField(default=37)
+    tension_arterielle = models.CharField(max_length=20, default="",)
+    frequence_cardiaque = models.IntegerField(default=0)
+    notes = models.TextField(blank=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
+    date_modification = models.DateTimeField(auto_now=True)
 
-    def get_prixTotal(self):
-        return self.hospitalisation.getPrice()
+    def __str__(self):
+        return f"Consultation du {self.date_consultation} pour {self.patient.username} par {self.medecin.username}"
 
 class Hospitalisation(models.Model):
     date_admission = models.DateTimeField()
@@ -154,45 +169,32 @@ class Hospitalisation(models.Model):
     date_resultats = models.DateTimeField()
     traitements = models.ManyToManyField(Traitement, verbose_name="")
     nom_deces = models.CharField(max_length=50)
+    consultation = models.ForeignKey(Consultation, default=None, on_delete=models.CASCADE)
     date_deces = models.DateTimeField()
-    facture = models.ForeignKey(Facture, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+class Facture(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    prix_total = models.FloatField(default=0)
+    hospitalisation = models.ForeignKey(Hospitalisation, default=None, on_delete=models.CASCADE)
+
 
     def getPrice(self):
-        for traitement in self.traitements:
-            self.facture.prix_total += traitement.price_total()
-        return self.facture.prix_total
+        for traitement in self.hospitalisation.traitements:
+            self.prix_total += traitement.prixTotal
+        return self.prix_total
 
 class CarnetSante(models.Model):
-    poids = models.FloatField()
-    taille = models.FloatField()
-    temperature = models.FloatField()
-    tension_arterielle = models.CharField(max_length=20)
-    frequence_cardiaque = models.IntegerField()
-    notes = models.TextField()
-    hospitalisation = models.ForeignKey(Hospitalisation, related_name='facture_patient', on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, related_name="patient_carnet", default=None, verbose_name="Carnet_patient", on_delete=models.CASCADE)
+    hospitalisations = models.ManyToManyField(Hospitalisation, related_name='hospitalisation_patient_carnetSante')
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Carnet de santé de {self.patient.user.username} suivi par {self.medecin.user.username}."
+        return f"Carnet de santé de {self.patient.last_name} cre le {self.date_creation.strftime('%b %Y, %A %d')}."
 
-    def get_carnet_sante_medecin(self):
-        return CarnetSante.objects.filter(medecin=self.hospitalisation.medecin).all()
-
-    def get_carnet_sante_patient(self):
-        return CarnetSante.objects.filter(patient=self.hospitalisation.patient).all()
-
-class Consultation(models.Model):
-    medecin = models.ForeignKey(Medecin, related_name='consultations_medecin', on_delete=models.CASCADE)
-    patient = models.ForeignKey(Patient, related_name='consultations_patient', on_delete=models.CASCADE)
-    date_consultation = models.DateTimeField()
-    motif = models.TextField()
-    diagnostic = models.TextField()
-    rdv = models.ForeignKey(Appointement, verbose_name="", on_delete=models.CASCADE)
-    typeConsult = models.CharField(max_length=50)
-    price = models.FloatField()
-    date_creation = models.DateTimeField(auto_now_add=True)
-    date_modification = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Consultation du {self.date_consultation} pour {self.patient.user.username} par {self.medecin.user.username}"
+    def add_hosp(self, hospitalisation):
+        if isinstance(hospitalisation, Hospitalisation):
+            self.hospitalisations.add(hospitalisation)

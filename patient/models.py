@@ -22,7 +22,12 @@ class Appointement(models.Model):
     def __str__(self):
         return f"Mr {self.patient.last_name} {self.patient.first_name} a demandé un rendez-vous au Docteur {self.medecin.first_name}"
 
-    def get_date(self):
+    def response(self, n):
+        if 0 <= n >= 3:
+            self.status = self.STATUS_CHOICE[n]
+            self.action()
+
+    def action(self):
         self.date_rdv = timezone.now() if self.status == self.STATUS_CHOICE[0] else None
         if self.date_rdv is not None:
             self.send_reminder_email()
