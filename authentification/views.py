@@ -16,20 +16,21 @@ def dash(user):
         return redirect('dashboard_ph')
 
 @login_required
-def redirection(request, first_name):
+def redirection(request):
     user = None
     try:
-        user = Patient.objects.get(first_name=first_name)
+        user = Patient.objects.get(first_name=request.user.first_name)
     except Patient.DoesNotExist:
         try:
-            user = Medecin.objects.get(first_name=first_name)
+            user = Medecin.objects.get(first_name=request.user.first_name)
         except Medecin.DoesNotExist:
             try:
-                user = Pharmacien.objects.get(first_name=first_name)
+                user = Pharmacien.objects.get(first_name=request.user.first_name)
             except Pharmacien.DoesNotExist:
                 pass
     if user is not None:
         dash(user)
+    else: return redirect('home')
 
 def log_in(request):
     if request.method == 'POST':
@@ -125,6 +126,7 @@ def deleteAccount(request):
                 user.delete()
                 out()
 
+@login_required
 def lock(request):
     if request.method == "POST":
         password = request.POST.get('password', '')

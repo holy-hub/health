@@ -35,14 +35,18 @@
 </style>
 {% endblock %}
 
-{% block %}
-<h1>Coming <br>Soon!</h1>
+{% block body %}
+<a href="{% url "redirection" %}" style="underline: none;">
+    <h1>Coming <br>Soon!</h1>
+</a>
 {% endblock %}
 
 {% block javascript %}
 <script>
-    setTimeout(function() {
-        window.location.href = "{% url 'redirection' request.user.first_name %}";
-    }, 60000); // 60000 millisecondes = 1 minutes
+    $(document).ready(function() {
+        setTimeout(function() {
+            window.location.href = "{% url 'redirection' %}";
+        }, 60000);
+    });
 </script>
 {% endblock %}

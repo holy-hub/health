@@ -69,25 +69,6 @@ class Consigne(models.Model):
     def __str__(self):
         return f"{self.medication.nom} suit la posologie `{self.posologie}`."
 
-class Prescription(models.Model):
-    title = models.CharField(max_length=50)
-    temperature = models.PositiveSmallIntegerField(default=37)
-    observation = models.TextField(verbose_name="Observations du medecin")
-    consigne = models.ManyToManyField(Consigne, verbose_name="Les medications et leur posologie a suivre")
-    patient = models.ForeignKey(Patient, related_name='prescriptions_patient', verbose_name="Patient de consultation", on_delete=models.CASCADE)
-    medecin = models.ForeignKey(Medecin, related_name='prescriptions_medecin', verbose_name="Medecin de consultation", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.medecin.username} prescrit cette ordonnance au patient #{self.patient.username} ayant une temperature de {self.temperature}*C."
-
-    def save(self, *args, **kwargs):
-        if self.medecin.is_medecin and self.patient.is_patient:
-            super().save(*args, **kwargs)
-
-    def get_consignes(self):
-        return [str(consigne) for consigne in self.consigne.all()]
-
 class Speciality(models.Model):
     nom = models.CharField(max_length=50, unique=True)
     description = models.TextField(verbose_name="description de la Spécialité")
@@ -119,10 +100,6 @@ class Traitement(models.Model):
         verbose_name = "Traitement"
         verbose_name_plural = "Traitements"
 
-    def save(self, *args, **kwargs):
-        if self.chambre.service == self.medecin.service:
-            super().save(*args, **kwargs)
-
     def price_total(self):
         self.prixTotal = self.price + self.chambre.price
         return self.prixTotal
@@ -146,9 +123,9 @@ class Consultation(models.Model):
     taille = models.FloatField( default=1.0,)
     rdv = models.ForeignKey(Appointement, verbose_name="", on_delete=models.CASCADE)
     typeConsult = models.CharField(max_length=50)
-    price = models.FloatField(default=0,)
+    price = models.FloatField(default=0)
     temperature = models.FloatField(default=37)
-    tension_arterielle = models.CharField(max_length=20, default="",)
+    tension_arterielle = models.CharField(max_length=20, default=0)
     frequence_cardiaque = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
     date_creation = models.DateTimeField(auto_now_add=True)
@@ -157,7 +134,32 @@ class Consultation(models.Model):
     def __str__(self):
         return f"Consultation du {self.date_consultation} pour {self.patient.username} par {self.medecin.username}"
 
+class Prescription(models.Model):
+    title = models.CharField(max_length=50)
+    temperature = models.PositiveSmallIntegerField(default=37)
+    observation = models.TextField(verbose_name="Observations du medecin")
+    consigne = models.ManyToManyField(Consigne, verbose_name="Les medications et leur posologie a suivre")
+    patient = models.ForeignKey(Patient, related_name='prescriptions_patient', verbose_name="Patient de consultation", on_delete=models.CASCADE)
+    medecin = models.ForeignKey(Medecin, related_name='prescriptions_medecin', verbose_name="Medecin de consultation", on_delete=models.CASCADE)
+    consultation = models.ForeignKey(Consultation, related_name='consultation_medecin', verbose_name="consultation du Medecin", default=None, on_delete=models.CASCADE)
+    medications = models.ManyToManyField(Medication, verbose_name="medicaments de prescription", default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.medecin.username} prescrit cette ordonnance au patient #{self.patient.username} ayant une temperature de {self.temperature}*C."
+
+    def save(self, *args, **kwargs):
+        if self.medecin.is_medecin and self.patient.is_patient:
+            super().save(*args, **kwargs)
+
+    def get_consignes(self):
+        return [str(consigne) for consigne in self.consigne.all()]
+
+    def get_medications(self):
+        return [str(medication) for medication in self.medications.all()]
+
 class Hospitalisation(models.Model):
+    title = models.CharField(max_length=50, default="Facture")
     date_admission = models.DateTimeField()
     motif_admission = models.TextField()
     accompagnant = models.CharField(max_length=50)
@@ -168,14 +170,15 @@ class Hospitalisation(models.Model):
     resultats = models.CharField(max_length=255)
     date_resultats = models.DateTimeField()
     traitements = models.ManyToManyField(Traitement, verbose_name="")
-    nom_deces = models.CharField(max_length=50)
+    cause_deces = models.CharField(max_length=50)
     consultation = models.ForeignKey(Consultation, default=None, on_delete=models.CASCADE)
     date_deces = models.DateTimeField()
 
     def __str__(self):
-        return self.name
-    
+        return self.title
+
 class Facture(models.Model):
+    patient = models.ForeignKey(Patient, verbose_name="Facture du patient", default=None, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     prix_total = models.FloatField(default=0)
     hospitalisation = models.ForeignKey(Hospitalisation, default=None, on_delete=models.CASCADE)
@@ -183,8 +186,21 @@ class Facture(models.Model):
 
     def getPrice(self):
         for traitement in self.hospitalisation.traitements:
-            self.prix_total += traitement.prixTotal
+            self.prix_total += traitement.priceTotal()
+        self.prix_total += self.hospitalisation.consultation.price
         return self.prix_total
+
+    def historique(self):
+        traitement_total = sum(traitement.priceTotal() for traitement in self.hospitalisation.traitements)
+        consultation_price = self.hospitalisation.consultation.price
+        total_price = traitement_total + consultation_price
+
+        return f"""
+            - {'Consultation':20} : {consultation_price:8} F CFA
+            - {'Prix des traitements':20} : {traitement_total:8} F CFA
+            ---------------------------------------
+            - {'Prix Total':20} : {total_price:8} F CFA
+        """
 
 class CarnetSante(models.Model):
     patient = models.ForeignKey(Patient, related_name="patient_carnet", default=None, verbose_name="Carnet_patient", on_delete=models.CASCADE)

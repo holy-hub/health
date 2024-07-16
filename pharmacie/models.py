@@ -26,6 +26,7 @@ class Maladie(models.Model):
     symptomes = models.TextField(verbose_name="Symptômes de la maladie")
     causes = models.TextField(verbose_name="Causes de la maladie")
     consequences = models.TextField(verbose_name="Conséquences de la maladie")
+    prevention = models.TextField(verbose_name="Preventions de la maladie", default="sauver des vies")
     disease_types = models.CharField(choices=DISEASE_TYPES, max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
 

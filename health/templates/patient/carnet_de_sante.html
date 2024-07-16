@@ -1,0 +1,95 @@
+{% extends 'patient_base.html' %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        CARNET DE SANTE
+        <small>Previsualisation du carnet</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Carnet de sante</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- START CUSTOM TABS -->
+    <h2 class="page-header">Tableau de Carnet</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Custom Tabs -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    {% for data in first_data %}
+                    <li class="active"><a href="#data.motif_admission" data-toggle="tab">{{ data.motif_admission }}</a></li>
+                    {% empty %}
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Info</a></li>
+                    {% endfor %}
+                    {% if last_data %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Dropdown <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for data in last_data %}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#data.motif_admission">{{ data.motif_admission }}</a></li>
+                            <li role="presentation" class="divider"></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                </ul>
+                <div class="tab-content">
+                    {% for cnt in carnet %}
+                    <div class="tab-pane active" id="{{ cnt.hospitalisation.motif_admission }}">
+                        <b>Consultation:</b> 
+                        <p>{{ cnt.consultation.typeConsult }}| {{ cnt.consultation.motif }}</p>
+                        {{ cnt.consultaion.diagnostic}}
+                        <code>
+                            <p><i>Poids: </i>{{ cnt.consultation.poids }}Kg</p>
+                            <p><i>Taille: </i>{{ cnt.consultation.taille }}m</p>
+                            <p><i>Temperature: </i>{{ cnt.consultation.temperature }}*C</p>
+                              <p><i>Tension arterielle: </i>{{ cnt.consultation.tension_arterielle }}</p>
+                        </code>
+                        {{ cnt.consultation.notes }}
+                        <div class="pull-right">{{ cnt.hospitalisation.date_entree.strftime('%b %d, %Y') }}</div>
+                    </div><!-- /.tab-pane -->
+                    {% empty %}
+                    <div class="tab-pane" id="tab_1">
+                        The European languages are members of the same family. Their separate existence is a myth.
+                        For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ
+                        in their grammar, their pronunciation and their most common words. Everyone realizes why a
+                        new common language would be desirable: one could refuse to pay expensive translators. To
+                        achieve this, it would be necessary to have uniform grammar, pronunciation and more common
+                        words. If several languages coalesce, the grammar of the resulting language is more simple
+                        and regular than that of the individual languages.
+                    </div><!-- /.tab-pane -->
+                    {% endfor %}
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+        </div><!-- /.col -->
+    </div> <!-- /.row -->
+    <!-- END CUSTOM TABS -->
+    {% endblock %}
+
+    {% block stylesheet %}
+    <!-- bootstrap 3.0.2 -->
+    <link href="{% static 'adminLTE/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- font Awesome -->
+    <link href="{% static 'adminLTE/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Ionicons -->
+    <link href="{% static 'adminLTE/css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Theme style -->
+    <link href="{% static 'adminLTE/css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
+    {% endblock %}
+    {% block content %}
+    <!-- jQuery 2.0.2 -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'adminLTE/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'adminLTE/js/AdminLTE/app.js' %}" type="text/javascript"></script>
+    {% endblock %}
