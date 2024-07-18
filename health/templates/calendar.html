@@ -1,4 +1,5 @@
 {% extends 'patient_base.html' %}
+{% load static %}
 
 {% block content %}
 <!-- Content Header (Page header) -->
@@ -110,7 +111,7 @@
 <script type="text/javascript">
     $(function () {
 
-        /* initialize the external events -----------------------------------------------------------------*/
+        /* initialize the external events */
         function ini_events(ele) {
             ele.each(function () {
 
@@ -122,13 +123,11 @@
 
                 $(this).data('eventObject', eventObject); // store the Event Object in the DOM element so we can get to it later
 
-                // make the event draggable using jQuery UI
                 $(this).draggable({
                     zIndex: 1070,
                     revert: true, // will cause the event to go back to its
                     revertDuration: 0  //  original position after the drag
-                });
-
+                }); // make the event draggable using jQuery UI
             });
         }
         ini_events($('#external-events div.external-event'));

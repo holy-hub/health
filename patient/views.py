@@ -6,17 +6,18 @@ from .models import *
 
 # Create your views here.
 # PATIENT
-# @login_required
+@login_required
 def dashboard(request):
     # rdv = Appointement.objects.filter(patient=request.user).all()
     # nb_rdv = len(rdv)
     context = {
         'title': 'Patient ', # + request.user.first_name,
+        'date': request.user.date_joined.strftime('%b %Y'),
         # 'nombres-de-rdv': nb_rdv,
     }
     return render(request, 'patient/dashboard.html', context)
 
-@login_required
+# @login_required
 def my_appointement(request):
     STATUS_CHOICE = (
         ('accepte', 'ACCEPTÉ'),
@@ -36,6 +37,7 @@ def my_appointement(request):
 
     context = {
         'title': 'Patient ' + request.user.first_name,
+        'date': request.user.date_joined.strftime('%b %Y'),
         'rdv_acceptes': rdv_accepte,
         'rdv_refuses': rdv_refuse,
         'rdv_annules': rdv_annule,
@@ -45,26 +47,29 @@ def my_appointement(request):
     }
     return render(request, 'patient/my_appointement.html', context)
 
-@login_required
-def ask_appointement(request, med_id):
+# @login_required
+def ask_appointement(request, med_user):
     if request.method == 'POST':
-        medecin = Medecin.objects.get(pk=med_id)
+        medecin = Medecin.objects.get(username=med_user)
         Appointement.objects.get_or_create(patient=request.user, medecin=medecin)
+        # messages.success(request, "Demande envoyee avec succes.")
 
-@login_required
+# @login_required
 def prescription(request):
     ordonnances = Prescription.objects.filter(patient=request.user).all()
     context = {
         'title': 'Mes ordonnances',
+        'date': request.user.date_joined.strftime('%b %Y'),
         'ordonnances': ordonnances,
     }
     return render(request, 'patient/my_prescription.html', context)
 
-@login_required
+# @login_required
 def prescription_name(request, prsc_name):
     ordonnance = Prescription.objects.get(title=prsc_name)
     context = {
         'title': 'Ordonnance ' + ordonnance.title,
+        'date': request.user.date_joined.strftime('%b %Y'),
         'ordonnances': ordonnance,
     }
     return render(request, 'patient/myOne_prescription.html', context)
@@ -73,24 +78,26 @@ def all_medecin(request):
     medecins = Medecin.objects.all()
     context = {
         'title': 'Tous les medecins',
+        'date': request.user.date_joined.strftime('%b %Y'),
         'medecins': medecins,
     }
     return render(request, 'patient/medecins.html', context)
 
-@login_required
+# @login_required
 def monCarnet(request):
     carnet = CarnetSante.objects.get(patient=request.user)
     first_data = carnet.hospitalisations[:14]
     last_data = carnet.hospitalisations[14:]
     context = {
         'title': 'Mon Carnet de Sante',
+        'date': request.user.date_joined.strftime('%b %Y'),
         'monCarnet': carnet,
         'first_data': first_data,
         'last_data': last_data,
     }
     return render(request, 'patient/carnet_de_sante.html', context)
 
-@login_required
+# @login_required
 def factures(request):
     factures = Facture.objects.filter(patient=request.user).all()
     conseils, maladies = list(Advice.objects.all()), list(Maladie.objects.all())
@@ -99,6 +106,7 @@ def factures(request):
 
     context = {
         'title': 'Mes Factures',
+        'date': request.user.date_joined.strftime('%b %Y'),
         'factures': factures,
         'conseils': three_conseils,
         'maladies': three_maladies,

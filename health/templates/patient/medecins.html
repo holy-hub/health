@@ -1,4 +1,5 @@
 {% extends 'patient_base.html' %}
+{% load static %}
 
 {% block stylesheet %}
   <!-- bootstrap 3.0.2 -->
@@ -63,7 +64,9 @@
                     <td>{{ med.address }}</td>
                     <td>{{ med.email }}</td>
                     <td>
-                      <a href="" class="btn btn-info"><i class="fa fa-dashboard"></i></a>
+                      <form action="{% url "ask_appointement" med.username %}" method="post">
+                        <button class="btn btn-info"><i class="fa fa-dashboard"></i></button>
+                      </form>
                     </td>
                   </tr>
                 {% empty %}

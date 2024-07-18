@@ -22,6 +22,7 @@
 
       <!-- lockscreen credentials (contains the form) -->
       <form action="{% url 'lock' %}" method="post">
+        {% csrf_token %}
         <div class="lockscreen-credentials">
           <div class="input-group">
             <input type="password" name="password" class="form-control" placeholder="password" />

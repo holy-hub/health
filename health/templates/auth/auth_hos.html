@@ -14,16 +14,20 @@
           Login
           <span class="underline"></span>
         </button>
-        <form class="form form-login" action="log_in">
+        {% if error %}
+        <div class="alert alert-danger d-block m-auto">{{ error }}</div>
+        {% endif %}
+        <form class="form form-login" action="{% url "log_in" %}" method="POST">
+          {% csrf_token %}
           <fieldset>
             <legend>Please, enter your email and password for login.</legend>
             <div class="input-block">
               <label>E-mail</label>
-              <input id="login-email" type="email" required />
+              <input id="login-email" type="email" name="email" required />
             </div>
             <div class="input-block">
               <label>Password</label>
-              <input id="login-password" type="password" required />
+              <input id="login-password" type="password" name="password" required />
             </div>
           </fieldset>
           <button type="submit" class="btn">Login</button>
@@ -34,26 +38,32 @@
           Sign Up
           <span class="underline"></span>
         </button>
-        <form class="form form-signup" action="log_on_sante">
+        <form class="form form-signup" action="{% url "log_on_sante" %}" method="POST">
+          {% csrf_token %}
           <fieldset>
-            <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+            <legend>Please, enter your username, password and password confirmation for sign up.</legend>
             <div class="input-block">
-              <label>E-mail</label>
-              <input id="signup-email" type="email" required />
+              <label>Username</label>
+              <input id="signup-email" type="name" name="username" required />
             </div>
             <div class="input-block">
               <label>Password</label>
-              <input id="signup-password" type="password" required />
+              <input id="signup-password" type="password" name="password" required />
             </div>
             <div class="input-block">
-              <label for="signup-password-confirm">Confirm password</label>
-              <input id="signup-password-confirm" type="password" required />
+              <label for="signup-status">Status</label>
+              <input id="signup-status" type="text" name="status" list="stat" placeholder="medecin ou pharmacien" required />
+              <datalist id="stat">
+                <option value="medecin">
+                <option value="pharmacien">
+              </datalist>
             </div>
           </fieldset>
           <button type="submit" class="btn">Continue</button>
         </form>
       </div>
     </div>
+    <div class="row d-block m-auto" style="background: #fff5;"><a href="{% url "log" %}" class="text-center nav-link" style="color: yellowgreen;">S'incrire en tant que Patient</a></div>
   </section>
 {% endblock %}
 

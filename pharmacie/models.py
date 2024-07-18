@@ -22,7 +22,6 @@ class Maladie(models.Model):
     )
     nom = models.CharField(max_length=100, verbose_name="Nom de la maladie")
     nom_scientiste = models.CharField(max_length=150, verbose_name="Nom Scientifique de la maladie")
-    description = models.TextField(verbose_name="Description de la maladie")
     symptomes = models.TextField(verbose_name="Symptômes de la maladie")
     causes = models.TextField(verbose_name="Causes de la maladie")
     consequences = models.TextField(verbose_name="Conséquences de la maladie")
@@ -31,17 +30,17 @@ class Maladie(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nom} ayant {len(self.medication)} medications comme solution pour y remedier."
+        return f"{self.nom} ayant {self.nom_scientiste} comme nom scientifique."
 
 class Medication(models.Model):
     nom = models.CharField(max_length=250)
-    role = models.TextField(verbose_name="Les effets de ce medicament.")
     prix = models.PositiveIntegerField(default=0)
-    ill = models.ForeignKey(Maladie, verbose_name="", on_delete=models.CASCADE)
     image = models.FileField(upload_to="image/produits/", max_length=255)
+    avantages = models.TextField(default="", max_length=255)
+    inconvenients = models.TextField(default="", max_length=255)
 
     def __str__(self):
-        return f"{self.nom} à {self.prix} F CFA, reduit les effets de la maladie {self.ill.nom}."
+        return f"{self.nom} à {self.prix} F CFA."
 
     def get_price(self):
         return f"{self.prix} F CFA" 
@@ -50,15 +49,11 @@ class Pharmacie(models.Model):
     nom = models.CharField(max_length=250, verbose_name="Nom de la pharmacie.")
     description = models.TextField(verbose_name="Situer la pharmacie", null=True)
     location = models.URLField(max_length=200, verbose_name="Coordonnées de la pharmacie.", null=True)
-    medications = models.ManyToManyField(Medication, verbose_name="Médicaments liés à la pharmacie")
+    medications = models.ManyToManyField(Medication, verbose_name="Médicaments liés à la pharmacie", related_name="pharmacie")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.pharmacien.username} proprietaire de la pharmacie {self.nom}"
-
-    def save(self, *args, **kwargs):
-        if self.pharmacien.is_pharmacien:
-            super().save(*args, **kwargs)
 
     def get_medication(self):
         return [str(medication) for medication in self.medications]

@@ -1,3 +1,113 @@
 {% extends "pharmacien_base.html" %}
 
-{% block content %}{% endblock content %}
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Dashboard
+        <small>Previsualisaation</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>
+                        {{ request.user.pharmacie.nom}}
+                    </h3>
+                    <p>Pharmacie</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="{% url "readOne_ph" request.user.pharmacie.nom %}" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>{{ nb_medocs }}</h3>
+                    <p>Medicaments enregistres</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="{% url "readOne_ph" request.user.pharmacie.nom %}" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+    </div><!-- /.row -->
+
+    <h4 class="page-header">
+        Informations Maladies
+        <small>Nous vous proposons d'en savoir plus sur ces <code><u>Maladies</u></code>.</small>
+    </h4>
+    <!-- Solid boxes -->
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Navy tile -->
+            <div class="box box-solid bg-navy">
+                <div class="box-header">
+                    <h3 class="box-title">{{ maladies[0].nom|upper }}</h3>
+                </div>
+                <div class="box-body">
+                    <u>Nom Scientifique</u>: <code>{{ maladies[0].nom_scientiste }}</code>
+                    <p>{{ maladies[0].symptomes }}</p>
+                    <small class="pull-right">{{ maladies[0].disease_types }}</small>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-md-4">
+            <!-- Purple tile -->
+            <div class="box box-solid bg-purple">
+                <div class="box-header">
+                    <h3 class="box-title">{{ maladies[1].nom|upper }}</h3>
+                </div>
+                <div class="box-body">
+                    <u>Nom Scientifique</u>: <code>{{ maladies[1].nom_scientiste }}</code>
+                    <p>{{ maladies[1].symptomes }}</p>
+                    <small class="pull-right">{{ maladies[1].disease_types }}</small>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-md-4">
+            <!-- Maroon tile -->
+            <div class="box box-solid bg-maroon">
+                <div class="box-header">
+                    <h3 class="box-title">{{ maladies[2].nom|upper }}</h3>
+                </div>
+                <div class="box-body">
+                    Nom Scientifique: <code>{{ maladies[2].nom_scientiste }}</code>
+                    <p>{{ maladies[2].symptomes }}</p>
+                    <small class="pull-right">{{ maladies[2].disease_types }}</small>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+{% endblock content %}

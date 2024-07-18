@@ -225,35 +225,41 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="glyphicon glyphicon-user"></i>
-                        <span>{{ request.user.last_name }} {{ request.user.first_name|upper }} <i
-                                class="caret"></i></span>
+                        {% if request.user.last_name and request.user.first_name %}
+                        <span>{{ request.user.last_name }} {{ request.user.first_name|upper }} <i class="caret"></i></span>
+                        {% else %}
+                        <span>John DOE <i class="caret"></i></span>
+                        {% endif %}
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header bg-light-blue">
                             <img src="{% static 'adminLTE/img/avatar3.png' %}" class="img-circle" alt="User Image" />
                             <p>
-                                {{ request.user.last_name }} {{ request.user.first_name }} - {{ request.user.profession
-                                }}
-                                <small>Member since { request.user.date_joined.strftime('%b %Y') }</small>
+                                {% if request.user.last_name and request.user.first_name and request.user.profession %}
+                                {{ request.user.last_name }} {{ request.user.first_name }} - {{ request.user.profession }}
+                                {% else %}
+                                John Doe - Utilisateur
+                                {% endif %}
+                                <small>Member since {% if request.user.date_joined %}{{ date }}{% else %}Juil 2024{% endif %}</small>
                             </p>
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
                             <div class="col-xs-4 text-center">
-                                <a href="#">Prendre rendez-vous</a>
+                                <a href="{% url "all_medecin" %}">Prendre rendez-vous</a>
                             </div>
                             <div class="col-xs-4 text-center">
-                                <a href="#">Mon carnet</a>
+                                <a href="{% url "monCarnet" %}">Mon carnet</a>
                             </div>
                             <div class="col-xs-4 text-center">
-                                <a href="#">Historique</a>
+                                <a href="{% url "coming_soon" %}">Historique</a>
                             </div>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="{% url "coming_soon" %}" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
                                 <a href="{% url "out" %}" class="btn btn-default btn-flat">Deconnexion</a>
@@ -276,7 +282,7 @@
                     <img src="{% static 'adminLTE/img/avatar3.png' %}" class="img-circle" alt="User Image" />
                 </div>
                 <div class="pull-left info">
-                    <p>Hello, {{ request.user.last_name }}</p>
+                    <p>Hello, {% if request.user.last_name %}{{ request.user.last_name }}{% else %}John{% endif %}</p>
 
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
@@ -297,6 +303,12 @@
                 <li class="active">
                     <a href="{% url "dashboard_p" %}">
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url "all_medecin" %}">
+                        <i class="fa fa-th"></i> <span>Prendre un rendez-vous</span>
+                        <small class="badge pull-right bg-red">new</small>
                     </a>
                 </li>
                 <li class="treeview">

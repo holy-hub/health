@@ -9,7 +9,7 @@ def dashboard(request):
     context = {
         'title': 'Medecin ' + request.user.user.username,
     }
-    return render(request, 'dashboard.html', context)
+    return render(request, 'medecin/dashboard.html', context)
 
 """
     Hospital CRUD
@@ -26,7 +26,7 @@ def creaHopital(request):
     context = {
         'title': 'Ajouter Hopital',
     }
-    return render(request, 'createHospital.html', context)
+    return render(request, 'medecin/createHospital.html', context)
 
 def readHopital(request, hos_name):
     hospital = Hopital.objects.get(nom=hos_name)
@@ -34,7 +34,7 @@ def readHopital(request, hos_name):
         'title': 'Afficher Hopital',
         'hopital': hospital,
     }
-    return render(request, 'updateHospital.html', context)
+    return render(request, 'medecin/updateHospital.html', context)
 
 def readAllHopital(request):
     hospitals = Hopital.objects.all()
@@ -42,7 +42,7 @@ def readAllHopital(request):
         'title': 'Afficher Hopitaux',
         'hopitals': hospitals,
     }
-    return render(request, 'updateHospital.html', context)
+    return render(request, 'medecin/updateHospital.html', context)
 
 @login_required
 def updHopital(request, hos_name):
@@ -61,14 +61,14 @@ def updHopital(request, hos_name):
         'title': 'Ajouter Hopital',
         'hopital': hospital,
     }
-    return render(request, 'updateHospital.html', context)
+    return render(request, 'medecin/updateHospital.html', context)
 
 @login_required
 def delHopital(request, hos_name):
-    if request.method == 'DEL':
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            Hopital.objects.get(nom=hos_name).delete()
+    h = Hopital.objects.get(nom=hos_name)
+    Archive.objects.create(content_object=h, archived_by=request.user)
+    h.delete()
+    return redirect('dashboard_m')
 
 """
     Advice CRUD
@@ -86,7 +86,7 @@ def creaAdvice(request):
     context = {
         'title': 'Ajouter Advice',
     }
-    return render(request, 'createAdvice.html', context)
+    return render(request, 'medecin/createAdvice.html', context)
 
 def readAdvice(request, adv_name):
     advice = Advice.objects.get(nom=adv_name)
@@ -94,7 +94,7 @@ def readAdvice(request, adv_name):
         'title': 'Ajouter Advice',
         'advice': advice,
     }
-    return render(request, 'readAdvice.html', context)
+    return render(request, 'medecin/readAdvice.html', context)
 
 def readAllAdvice(request):
     advice = Advice.objects.all()
@@ -102,7 +102,7 @@ def readAllAdvice(request):
         'title': 'Afficher Advices',
         'advice': advice,
     }
-    return render(request, 'readAllAdvice.html', context)
+    return render(request, 'medecin/readAllAdvice.html', context)
 
 @login_required
 def updAdvice(request, adv_name):
@@ -123,14 +123,14 @@ def updAdvice(request, adv_name):
         'title': 'Ajouter Advice',
         'advice': advice,
     }
-    return render(request, 'updateAdvice.html', context)
+    return render(request, 'medecin/updateAdvice.html', context)
 
 @login_required
 def delAdvice(request, adv_name):
-    if request.method == 'DEL':
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            Advice.objects.get(nom=adv_name).delete()
+    a = Advice.objects.get(nom=adv_name)
+    Archive.objects.create(content_object=a, archived_by=request.user)
+    a.delete()
+    return redirect('dashboard_m')
 
 """
     Consigne CRUD
@@ -146,7 +146,7 @@ def creaConsigne(request):
     context = {
         'title': 'Ajouter Consigne',
     }
-    return render(request, 'createConsigne.html', context)
+    return render(request, 'medecin/createConsigne.html', context)
 
 def readConsigne(request, csg_name):
     consigne = Consigne.objects.get(nom=csg_name)
@@ -154,7 +154,7 @@ def readConsigne(request, csg_name):
         'title': 'Ajouter Consigne',
         'consigne': consigne,
     }
-    return render(request, 'updateHospital.html', context)
+    return render(request, 'medecin/updateHospital.html', context)
 
 def readAllConsigne(request):
     consignes = Consigne.objects.all()
@@ -162,7 +162,7 @@ def readAllConsigne(request):
         'title': 'Afficher tous les Consignes',
         'consignes': consignes,
     }
-    return render(request, 'readAllConsigne.html', context)
+    return render(request, 'medecin/readAllConsigne.html', context)
 
 @login_required
 def updConsigne(request, csg_name):
@@ -179,14 +179,14 @@ def updConsigne(request, csg_name):
         'title': 'Modifier Consigne',
         'consigne': consigne,
     }
-    return render(request, 'updateHospital.html', context)
+    return render(request, 'medecin/updateHospital.html', context)
 
 @login_required
 def delConsigne(request, csg_name):
-    if request.method == 'DEL':
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            Consigne.objects.get(nom=csg_name).delete()
+    c = Consigne.objects.get(nom=csg_name)
+    Archive.objects.create(content_object=c, archived_by=request.user)
+    c.delete()
+    return redirect('dashboard_m')
 
 """
     Prescription CRUD
@@ -204,7 +204,7 @@ def creaPrescription(request):
     context = {
         'title': 'Ajouter Prescription',
     }
-    return render(request, 'createPrescription.html', context)
+    return render(request, 'medecin/createPrescription.html', context)
 
 def readPrescription(request, prsc_title):
     prescription = Prescription.objects.get(nom=prsc_title)
@@ -212,7 +212,7 @@ def readPrescription(request, prsc_title):
         'title': 'Afficher Prescription',
         'Prescription': prescription,
     }
-    return render(request, 'readPrscription.html', context)
+    return render(request, 'medecin/readPrscription.html', context)
 
 def readAllPrescription(request):
     prescriptions = Prescription.objects.all()
@@ -220,7 +220,7 @@ def readAllPrescription(request):
         'title': 'Afficher Les Prescriptions',
         'prescriptions': prescriptions,
     }
-    return render(request, 'readAllPrscription.html', context)
+    return render(request, 'medecin/readAllPrscription.html', context)
 
 @login_required
 def updPrescription(request, prsc_title):
@@ -239,14 +239,14 @@ def updPrescription(request, prsc_title):
         'title': 'Ajouter Prescription',
         'Prescription': prescription,
     }
-    return render(request, 'updatePrescription.html', context)
+    return render(request, 'medecin/updatePrescription.html', context)
 
 @login_required
 def delPrescription(request, prsc_title):
-    if request.method == 'DEL':
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            Prescription.objects.get(nom=prsc_title).delete()
+    p = Hopital.objects.get(nom=prsc_title)
+    Archive.objects.create(content_object=p, archived_by=request.user)
+    p.delete()
+    return redirect('dashboard_m')
 
 """
     Speciality CRUD
@@ -262,7 +262,7 @@ def creaSpeciality(request):
     context = {
         'title': 'Ajouter Speciality',
     }
-    return render(request, 'createSpeciality.html', context)
+    return render(request, 'medecin/createSpeciality.html', context)
 
 def readSpeciality(request, spc_name):
     speciality = Speciality.objects.get(title=spc_name)
@@ -270,7 +270,7 @@ def readSpeciality(request, spc_name):
         'title': 'Ajouter Speciality',
         'Speciality': speciality,
     }
-    return render(request, 'readSpeciality.html', context)
+    return render(request, 'medecin/readSpeciality.html', context)
 
 def readAllSpeciality(request):
     specialities = Speciality.objects.all()
@@ -278,7 +278,7 @@ def readAllSpeciality(request):
         'title': 'Ajouter Speciality',
         'specialities': specialities,
     }
-    return render(request, 'readAllSpeciality.html', context)
+    return render(request, 'medecin/readAllSpeciality.html', context)
 
 @login_required
 def updSpeciality(request, spc_name):
@@ -295,11 +295,11 @@ def updSpeciality(request, spc_name):
         'title': 'Ajouter Speciality',
         'Speciality': speciality,
     }
-    return render(request, 'updateSpeciality.html', context)
+    return render(request, 'medecin/updateSpeciality.html', context)
 
 @login_required
 def delSpeciality(request, spc_name):
-    if request.method == 'DEL':
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            Speciality.objects.get(title=spc_name).delete()
+    s = Hopital.objects.get(nom=spc_name)
+    Archive.objects.create(content_object=s, archived_by=request.user)
+    s.delete()
+    return redirect('dashboard_m')

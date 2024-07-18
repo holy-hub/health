@@ -12,9 +12,9 @@ class Utilisateur(User):
         ('N-G', 'NON-GENRE'),
     )
     STATUS_CHOICE = (('patient', 'PATIENT'), ('medecin', 'MEDECIN'), ('pharmacien', 'PHARMACIEN'))
-    mobile = models.CharField(max_length=20, unique=True)
+    mobile = models.CharField(max_length=20, blank=True, default="")
     sexe = models.CharField(max_length=20, choices=SEX_CHOICES, default=SEX_CHOICES[0])
-    address = models.CharField(max_length=20)
+    address = models.CharField(max_length=20, default="")
     status = models.CharField(max_length=10, choices=STATUS_CHOICE, default=STATUS_CHOICE[0])
     deleted = models.BooleanField(default=False)
     image = models.FileField(upload_to="static/adminLTE/img/profile/", max_length=255, blank=True, default="static/adminLTE/img/avatar5.png")
@@ -43,9 +43,20 @@ class Utilisateur(User):
     def archive(self):
         Archive.objects.create(content_object=self, archived_by=self).save()
 
+class Patient(Utilisateur):
+    profession = models.CharField(verbose_name="Profession du Patient", default="survivant", max_length=50)
+    assurance_medicale = models.BooleanField(default=False)
+    code_assurance = models.CharField(max_length=50, blank=True)
+    personne_a_prevenir = models.CharField(max_length=50, blank=True)
+    tel_personne_a_prevenir = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return f"Patient { self.first_name }"
+
 class Pharmacien(Utilisateur):
     preuvePharmacien = models.FileField(upload_to="health/static/Pharmacien/")
     pharmacie = models.ForeignKey('pharmacie.Pharmacie', verbose_name="Pharmacie", null=True, on_delete=models.CASCADE)
+    approuverPharmacien =  models.BooleanField(default=False, verbose_name="Validation du pharmacien")
 
     def __str__(self):
         return f"Pharmacien {self.first_name}"
@@ -57,6 +68,7 @@ class Pharmacien(Utilisateur):
 class Medecin(Utilisateur):
     preuveMedecin = models.FileField(upload_to='health/static/Medecin/')
     speciality = models.ForeignKey("medecin.Speciality", verbose_name="Specialite du medecin", null=True, on_delete=models.CASCADE)
+    approuverMedecin =  models.BooleanField(default=False, verbose_name="Validation du medecin")
 
     def __str__(self):
         return f"Medecin {self.first_name}"
@@ -64,16 +76,6 @@ class Medecin(Utilisateur):
     def save(self, *args, **kwargs):
         self.status = self.STATUS_CHOICE[1]
         super().save(*args, **kwargs)
-
-class Patient(Utilisateur):
-    profession = models.CharField(verbose_name="Profession du Patient", default="survivant", max_length=50)
-    assurance_medicale = models.BooleanField(default=False)
-    code_assurance = models.CharField(max_length=50, blank=True)
-    personne_a_prevenir = models.CharField(max_length=50, blank=True)
-    tel_personne_a_prevenir = models.CharField(max_length=20, blank=True)
-
-    def __str__(self):
-        return f"Patient { self.first_name }"
 
 class Archive:
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -84,5 +86,3 @@ class Archive:
 
     def __str__(self):
         return f"Archive {self.content_type.name} at {self.archived_at.strftime('%Y, %B %d, %A')} by {self.archived_by.first_name}."
-
-    

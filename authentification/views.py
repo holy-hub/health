@@ -1,46 +1,51 @@
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
 from django.utils import timezone
 from .models import *
 
 # Create your views here.
-def dash(user):
-    if isinstance(user, Patient):
-        return redirect('dashboard_p')
-    elif isinstance(user, Medecin):
-        return redirect('dashboard_m')
-    elif isinstance(user, Pharmacien):
-        return redirect('dashboard_ph')
+def dash(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if hasattr(user, 'medecin'):
+            return redirect('dashboard_m')
+        elif hasattr(user, 'pharmacien'):
+            return redirect('dashboard_ph')
+    return redirect('dashboard_p')
 
-@login_required
 def redirection(request):
     user = None
-    try:
-        user = Patient.objects.get(first_name=request.user.first_name)
-    except Patient.DoesNotExist:
+    if request.user.is_authenticated:
         try:
-            user = Medecin.objects.get(first_name=request.user.first_name)
-        except Medecin.DoesNotExist:
+            user = Patient.objects.get(first_name=request.user.first_name)
+        except Patient.DoesNotExist:
             try:
-                user = Pharmacien.objects.get(first_name=request.user.first_name)
-            except Pharmacien.DoesNotExist:
-                pass
-    if user is not None:
-        dash(user)
-    else: return redirect('home')
+                user = Medecin.objects.get(first_name=request.user.first_name)
+            except Medecin.DoesNotExist:
+                try:
+                    user = Pharmacien.objects.get(first_name=request.user.first_name)
+                except Pharmacien.DoesNotExist:
+                    pass
+        if user is not None:
+            dash(request)
+    return redirect('home')
 
 def log_in(request):
     if request.method == 'POST':
-        email = request.POST.get('email', '')
+        username = request.POST.get('username', '')
         password = request.POST.get('password', '')
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            dash(user)
+            return dash(request)
+        else:
+            return render(request, 'auth/auth.html', {'error': 'Identifiants invalides'})
+    return redirect('log')
 
 @login_required
 def out(request):
@@ -49,63 +54,71 @@ def out(request):
 
 def log_on_patient(request):
     if request.method == "POST":
-        firstname = request.POST.get('firstname', '')
-        lastname = request.POST.get('lastname', '')
         username = request.POST.get('username', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
+        password = make_password(password)
 
-        mobile = request.POST.get('mobile', '')
-        sexe = request.POST.get('sexe', '')
-        profession = request.POST.get('profession', '')
-
-        patient = Patient.objects.create(mobile=mobile, profession=profession, sexe=sexe, firstname=firstname, lastname=lastname, username=username, email=email, password=password)
+        patient = Patient.objects.create(email=email, username=username, password=password)
         patient.save()
-        send_mail(
+        """ send_mail(
             'INSCRIPTION SUR HEALTH',
             'Felicition, vous venez de creer un compte sur notre plateforme. Merci de votre fidelite',
             'healthy@health@gmail.com', 
             [email]
-        )
-        return redirect('log')
+        ) """
+    return redirect('log')
 
 def log_on_sante(request):
     if request.method == "POST":
         status = request.POST.get('status', '')
 
-        firstname = request.POST.get('firstname', '')
-        lastname = request.POST.get('lastname', '')
         username = request.POST.get('username', '')
-        email = request.POST.get('email', '')
         password = request.POST.get('password', '')
-
-        mobile = request.POST.get('mobile', '')
-        sexe = request.POST.get('sexe', '')
-        preuve = request.POST.get('preuve', '')
+        password = make_password(password)
 
         if status == 'medecin':
-            medoc = Medecin.objects.create(mobile=mobile, preuveMedecin=preuve, sexe=sexe, firstname=firstname, lastname=lastname, username=username, email=email, password=password, preuve=preuve)
+            medoc = Medecin.objects.create(username=username, password=password)
             medoc.save()
-            send_mail(
-                'INSCRIPTION SUR HEALTH',
-                'Felicition, vous venez de creer un compte Medecin sur notre plateforme. Merci de votre fidelite.\nNous aurons a verifie votre document fourni et nous vous revenons tres bientot.',
-                'healthy@health@gmail.com', 
-                [email]
-            )
         elif status == 'pharmacien':
-            pharm = Pharmacien.objects.create(mobile=mobile, preuvePharmacien=preuve, sexe=sexe, firstname=firstname, lastname=lastname, username=username, email=email, password=password, preuve=preuve)
+            pharm = Pharmacien.objects.create(username=username, password=password)
             pharm.save()
-            send_mail(
-                'INSCRIPTION SUR HEALTH',
-                'Felicition, vous venez de creer un compte Pharmacien sur notre plateforme. Merci de votre fidelite.\nNous aurons a verifie votre document fourni et nous vous revenons tres bientot.',
-                'healthy@health@gmail.com', 
-                [email]
-            )
-        return redirect('home')
+        return redirect('check_status', username, status)
+    return redirect('log')
+
+def check_status(request, username, status):
+    user = None
+    if request.method == 'POST':
+        sexe = request.POST.get('sexe', '')
+        last_name = request.POST.get('last_name', '')
+        first_name = request.POST.get('first_name', '')
+        mobile = request.POST.get('mobile', '')
+        preuve = request.FILES.get('preuve', None)
+
+        if  status == 'medecin':
+            user = Medecin.objects.get(username=username)
+        elif status == 'pharmacien':
+            user = Pharmacien.objects.get(username=username)
+
+        if user is not None:
+            user.sexe = sexe
+            user.last_name = last_name
+            user.first_name = first_name
+            user.mobile = mobile
+            user.preuve = preuve
+            user.save()
+            return redirect('home')
+        return redirect('log_hos')
+    context = {
+        'title': 'Verification du status',
+        'username': username,
+        'status': status,
+    }
+    return render(request, 'auth/check.html', context)
 
 def auth(request):
     context = {
-        'title': 'Authentification',
+        'title': 'Verification du status',
     }
     return render(request, 'auth/auth.html', context)
 
@@ -133,7 +146,7 @@ def lock(request):
         user = authenticate(request, email=request.user.email, password=password)
         if user is not None:
             login(request, user)
-            dash(user)
+            dash(request)
 
 @login_required
 def veille(request):

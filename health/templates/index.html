@@ -10,7 +10,7 @@
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="{% url "home" %}" class="logo me-auto"><img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid"></a>-->
 
-      <nav id="navbar" class="navbar order-last order-lg-0">
+      <nav id="navbar" class="navbar order-last order-lg-0" style="scroll-behavior: smooth; transition: all 5s ease-in-out;">
         <ul>
           <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
           <li><a class="nav-link scrollto" href="#services">Informations</a></li>
@@ -18,7 +18,7 @@
           <li><a class="nav-link scrollto" href="#gallery">Gallerie</a></li>
           <li><a class="nav-link scrollto" href="#about">Nos Services</a></li>
           <li><a class="nav-link scrollto" href="{% url "log" %}">Se Connecter</a></li>
-        <a href="rdv.html" class="appointment-btn scrollto"><span class="d-none p-1 d-md-inline">Contacte</a>
+        <a href="{% url "readAll_ph" %}" class="appointment-btn scrollto"><span class="d-none p-1 d-md-inline">Contacte</a>
       </nav><!--.navbar -->
     </div>
   </header><!-- End Header -->
