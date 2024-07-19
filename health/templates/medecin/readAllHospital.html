@@ -1,0 +1,19 @@
+
+
+{% extends "medecin_base.html" %}
+
+{% block content %}
+
+<div class="box box-primary">
+    <div class="box-header">
+        <h3 class="box-title">{{ title }}</h3>
+        <ul>
+            {% for hopital in hopitals %}
+            <li>{{ hopital.nom }} - <a href="{% url 'readHopital' hopital.nom %}">Voir</a></li>
+            {% endfor %}
+        </ul>
+    </div><!-- /.box-header -->
+    <!-- form start -->
+</div>
+
+{% endblock %}

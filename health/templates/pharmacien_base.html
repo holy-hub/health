@@ -233,8 +233,7 @@
                         <li class="user-header bg-light-blue">
                             <img src="{% static 'adminLTE/img/avatar3.png' %}" class="img-circle" alt="User Image" />
                             <p>
-                                {{ request.user.last_name }} {{ request.user.first_name }} - {{ request.user.profession
-                                }}
+                                {{ request.username }} - {{ request.user.profession }}
                                 <small>Member since { request.user.date_joined.strftime('%b %Y') }</small>
                             </p>
                         </li>
@@ -312,8 +311,8 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url "readOne_ph" request.user.pharmacie.nom %}"><i class="fa fa-angle-double-right"></i> Mes medicaments</a></li>
-                        <li><a href="{% url "readAll_medoc" %}"><i class="fa fa-angle-double-right"></i> Consulter les Pharmacies</a>
+                        <li><a href="{% url "readAll_medoc" %}"><i class="fa fa-angle-double-right"></i> Mes medicaments</a></li>
+                        <li><a href="{% url "readAll_ph" %}"><i class="fa fa-angle-double-right"></i> Consulter les Pharmacies</a>
                         </li>
                         <li><a href="{% url "coming_soon" %}"><i class="fa fa-angle-double-right"></i> Ma pharmacie</a></li>
                     </ul>

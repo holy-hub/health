@@ -4,7 +4,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Dashboard
+        Dashboard {{ request.user.username}}
         <small>Previsualisaation</small>
     </h1>
     <ol class="breadcrumb">
@@ -22,15 +22,16 @@
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3>
-                        {{ request.user.pharmacie.nom}}
+                        {% if request.user.pharmacie.nom %}{{ request.user.pharmacie.nom }}
+                        {% else %}Ma Pharmacie
+                        {% endif %}
                     </h3>
                     <p>Pharmacie</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="{% url "readOne_ph" request.user.pharmacie.nom %}" class="small-box-footer">
-                    More info <i class="fa fa-arrow-circle-right"></i>
+                <a href="{% url "readAll_ph" %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
@@ -44,7 +45,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="{% url "readOne_ph" request.user.pharmacie.nom %}" class="small-box-footer">
+                <a href="{% url "readAll_ph" %}" class="small-box-footer">
                     More info <i class="fa fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -55,18 +56,19 @@
         Informations Maladies
         <small>Nous vous proposons d'en savoir plus sur ces <code><u>Maladies</u></code>.</small>
     </h4>
+    {% if maladies %}
     <!-- Solid boxes -->
     <div class="row">
         <div class="col-md-4">
             <!-- Navy tile -->
             <div class="box box-solid bg-navy">
                 <div class="box-header">
-                    <h3 class="box-title">{{ maladies[0].nom|upper }}</h3>
+                    <h3 class="box-title">{{ maladies.0.nom|upper }}</h3>
                 </div>
                 <div class="box-body">
-                    <u>Nom Scientifique</u>: <code>{{ maladies[0].nom_scientiste }}</code>
-                    <p>{{ maladies[0].symptomes }}</p>
-                    <small class="pull-right">{{ maladies[0].disease_types }}</small>
+                    <u>Nom Scientifique</u>: <code>{{ maladies.0.nom_scientiste }}</code>
+                    <p>{{ maladies.0.symptomes }}</p>
+                    <small class="pull-right">{{ maladies.0.disease_types }}</small>
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -78,12 +80,12 @@
             <!-- Purple tile -->
             <div class="box box-solid bg-purple">
                 <div class="box-header">
-                    <h3 class="box-title">{{ maladies[1].nom|upper }}</h3>
+                    <h3 class="box-title">{{ maladies.1.nom|upper }}</h3>
                 </div>
                 <div class="box-body">
-                    <u>Nom Scientifique</u>: <code>{{ maladies[1].nom_scientiste }}</code>
-                    <p>{{ maladies[1].symptomes }}</p>
-                    <small class="pull-right">{{ maladies[1].disease_types }}</small>
+                    <u>Nom Scientifique</u>: <code>{{ maladies.1.nom_scientiste }}</code>
+                    <p>{{ maladies.1.symptomes }}</p>
+                    <small class="pull-right">{{ maladies.1.disease_types }}</small>
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -95,12 +97,12 @@
             <!-- Maroon tile -->
             <div class="box box-solid bg-maroon">
                 <div class="box-header">
-                    <h3 class="box-title">{{ maladies[2].nom|upper }}</h3>
+                    <h3 class="box-title">{{ maladies.2.nom|upper }}</h3>
                 </div>
                 <div class="box-body">
-                    Nom Scientifique: <code>{{ maladies[2].nom_scientiste }}</code>
-                    <p>{{ maladies[2].symptomes }}</p>
-                    <small class="pull-right">{{ maladies[2].disease_types }}</small>
+                    Nom Scientifique: <code>{{ maladies.2.nom_scientiste }}</code>
+                    <p>{{ maladies.2.symptomes }}</p>
+                    <small class="pull-right">{{ maladies.2.disease_types }}</small>
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -109,5 +111,8 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
+    {% else %}
+    <div class="row"></div>
+    {% endif %}
 </section>
 {% endblock content %}

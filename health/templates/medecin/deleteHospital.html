@@ -1,0 +1,26 @@
+
+
+{% extends "medecin_base.html" %}
+
+{% block content %}
+
+<div class="box box-primary">
+    <div class="box-header">
+        <h3 class="box-title">Supprimer Hôpital</h3>
+        <h1>Confirmer la suppression</h1>
+        <p>Voulez-vous vraiment supprimer l'hôpital "{{ hopital.nom }}" ?</p>
+
+    </div><!-- /.box-header -->
+    <!-- form start -->
+    <form role="form">
+        {% csrf_token %}
+        
+
+        <div class="box-footer">
+            <button type="submit" class="btn btn-primary">oui, supprimer</button>
+        </div>
+    </form>
+    <a href="{% url 'readAll_hos' %}">Annuler</a>
+
+</div>
+{% endblock %}

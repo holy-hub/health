@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import *
 
@@ -6,10 +6,34 @@ from .models import *
 # MEDECIN
 @login_required
 def dashboard(request):
+    medecin = get_object_or_404(Medecin, id=request.user.id)
+    rdvs = Appointement.objects.filter(medecin=medecin, status='EN ATTENTE').all()
+    rdva = Appointement.objects.filter(medecin=medecin, status='ACCEPTÉ').all()
     context = {
-        'title': 'Medecin ' + request.user.user.username,
+        'title': 'Medecin ' + medecin.username,
+        'rdvs': rdvs,
+        'rdva': rdva,
+        'date': request.user.date_joined.strftime('%b %Y'),
     }
     return render(request, 'medecin/dashboard.html', context)
+
+@login_required
+def accepte(request, id):
+    rdv = get_object_or_404(Appointement, pk=id)
+    rdv.response(0)
+
+@login_required
+def refuse(request, id):
+    rdv = get_object_or_404(Appointement, pk=id)
+    rdv.response(1)
+    return redirect('dashboard_m')
+
+def prevu(request, id):
+    if request.method == 'POST':
+        rdv = get_object_or_404(Appointement, pk=id)
+        date = request.POST.get('date')
+        rdv.date_rdv = date
+        return redirect('dashboard_m')
 
 """
     Hospital CRUD
@@ -28,8 +52,8 @@ def creaHopital(request):
     }
     return render(request, 'medecin/createHospital.html', context)
 
-def readHopital(request, hos_name):
-    hospital = Hopital.objects.get(nom=hos_name)
+def readHopital(request, id):
+    hospital = Hopital.objects.get(pk=id)
     context = {
         'title': 'Afficher Hopital',
         'hopital': hospital,
@@ -45,8 +69,8 @@ def readAllHopital(request):
     return render(request, 'medecin/updateHospital.html', context)
 
 @login_required
-def updHopital(request, hos_name):
-    hospital = Hopital.objects.get(nom=hos_name)
+def updHopital(request, id):
+    hospital = Hopital.objects.get(pk=id)
     if request.method == 'PUT':
         nom = request.POST.get('nom', '')
         adresse = request.POST.get('adresse', '')
@@ -64,8 +88,8 @@ def updHopital(request, hos_name):
     return render(request, 'medecin/updateHospital.html', context)
 
 @login_required
-def delHopital(request, hos_name):
-    h = Hopital.objects.get(nom=hos_name)
+def delHopital(request, id):
+    h = Hopital.objects.get(pk=id)
     Archive.objects.create(content_object=h, archived_by=request.user)
     h.delete()
     return redirect('dashboard_m')
@@ -89,7 +113,7 @@ def creaAdvice(request):
     return render(request, 'medecin/createAdvice.html', context)
 
 def readAdvice(request, adv_name):
-    advice = Advice.objects.get(nom=adv_name)
+    advice = Advice.objects.get(pk=adv_name)
     context = {
         'title': 'Ajouter Advice',
         'advice': advice,
@@ -106,7 +130,7 @@ def readAllAdvice(request):
 
 @login_required
 def updAdvice(request, adv_name):
-    advice = Advice.objects.get(nom=adv_name)
+    advice = Advice.objects.get(pk=adv_name)
     if request.method == 'PUT':
         title = request.POST.get('title', '')
         content = request.POST.get('content', '')
@@ -127,7 +151,7 @@ def updAdvice(request, adv_name):
 
 @login_required
 def delAdvice(request, adv_name):
-    a = Advice.objects.get(nom=adv_name)
+    a = Advice.objects.get(pk=adv_name)
     Archive.objects.create(content_object=a, archived_by=request.user)
     a.delete()
     return redirect('dashboard_m')
@@ -149,7 +173,7 @@ def creaConsigne(request):
     return render(request, 'medecin/createConsigne.html', context)
 
 def readConsigne(request, csg_name):
-    consigne = Consigne.objects.get(nom=csg_name)
+    consigne = Consigne.objects.get(pk=csg_name)
     context = {
         'title': 'Ajouter Consigne',
         'consigne': consigne,
@@ -166,7 +190,7 @@ def readAllConsigne(request):
 
 @login_required
 def updConsigne(request, csg_name):
-    consigne = Consigne.objects.get(nom=csg_name)
+    consigne = Consigne.objects.get(pk=csg_name)
     if request.method == 'PUT':
         medication = request.POST.get('medication', '')
         posologie = request.POST.get('posologie', '')
@@ -183,7 +207,7 @@ def updConsigne(request, csg_name):
 
 @login_required
 def delConsigne(request, csg_name):
-    c = Consigne.objects.get(nom=csg_name)
+    c = Consigne.objects.get(pk=csg_name)
     Archive.objects.create(content_object=c, archived_by=request.user)
     c.delete()
     return redirect('dashboard_m')
@@ -207,7 +231,7 @@ def creaPrescription(request):
     return render(request, 'medecin/createPrescription.html', context)
 
 def readPrescription(request, prsc_title):
-    prescription = Prescription.objects.get(nom=prsc_title)
+    prescription = Prescription.objects.get(pk=prsc_title)
     context = {
         'title': 'Afficher Prescription',
         'Prescription': prescription,
@@ -224,7 +248,7 @@ def readAllPrescription(request):
 
 @login_required
 def updPrescription(request, prsc_title):
-    prescription = Prescription.objects.get(nom=prsc_title)
+    prescription = Prescription.objects.get(pk=prsc_title)
     if request.method == 'PUT':
         nom = request.POST.get('nom', '')
         adresse = request.POST.get('adresse', '')
@@ -243,7 +267,7 @@ def updPrescription(request, prsc_title):
 
 @login_required
 def delPrescription(request, prsc_title):
-    p = Hopital.objects.get(nom=prsc_title)
+    p = Hopital.objects.get(pk=prsc_title)
     Archive.objects.create(content_object=p, archived_by=request.user)
     p.delete()
     return redirect('dashboard_m')
@@ -299,7 +323,7 @@ def updSpeciality(request, spc_name):
 
 @login_required
 def delSpeciality(request, spc_name):
-    s = Hopital.objects.get(nom=spc_name)
+    s = Hopital.objects.get(pk=spc_name)
     Archive.objects.create(content_object=s, archived_by=request.user)
     s.delete()
     return redirect('dashboard_m')

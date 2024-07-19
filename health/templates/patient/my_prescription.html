@@ -1,8 +1,26 @@
 {% extends "patient_base.html" %}
+{% load static %}
 
 {% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Mes Prescriptions
+    <small>Page de prévisualisation</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li>
+      <a href="{% url 'home' %}"><i class="fa fa-dashboard"></i> Home</a>
+    </li>
+    <li>
+      <a href="{% url 'all_medecin' %}"><i class="fa fa-dashboard"></i>Rendez-vous</a>
+    </li>
+    <li class="active">Ordonnance</li>
+  </ol>
+</section>
 
-<h4 class="page-header">
+<section class="content">
+  <h4 class="page-header">
     Conseils medicals
     <small>Voici pour vous quelques conseils de nos experts medicals</small>
   </h4>
@@ -20,7 +38,9 @@
         </div>
         <div class="box-body">
           Box class: <code>.box.box-solid.box-danger</code>
-          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
+          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner
+            weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa
+            hydrometer.</p>
         </div>
         <!-- /.box-body -->
       </div>
@@ -40,7 +60,9 @@
         </div>
         <div class="box-body">
           Box class: <code>.box.box-solid.box-success</code>
-          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
+          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner
+            weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa
+            hydrometer.</p>
         </div>
         <!-- /.box-body -->
       </div>
@@ -60,7 +82,9 @@
         </div>
         <div class="box-body">
           Box class: <code>.box.box-solid.box-warning</code>
-          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
+          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner
+            weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa
+            hydrometer.</p>
         </div>
         <!-- /.box-body -->
       </div>
@@ -84,7 +108,9 @@
         </div>
         <div class="box-body">
           Box class: <code>.box.box-solid.bg-navy</code>
-          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
+          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner
+            weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa
+            hydrometer.</p>
         </div>
         <!-- /.box-body -->
       </div>
@@ -100,7 +126,9 @@
         </div>
         <div class="box-body">
           Box class: <code>.box.box-solid.bg-maroon</code>
-          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
+          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner
+            weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa
+            hydrometer.</p>
         </div>
         <!-- /.box-body -->
       </div>
@@ -110,13 +138,15 @@
 
     <div class="col-md-4">
       <!-- Maroon tile -->
-      <div class="box box-solid bg-maroon">
+      <div class="box box-solid bg-purple">
         <div class="box-header">
-          <h3 class="box-title">Maroon Tile</h3>
+          <h3 class="box-title">Purple Tile</h3>
         </div>
         <div class="box-body">
-          Box class: <code>.box.box-solid.bg-maroon</code>
-          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
+          Box class: <code>.box.box-solid.bg-purple</code>
+          <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner
+            weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa
+            hydrometer.</p>
         </div>
         <!-- /.box-body -->
       </div>
@@ -130,21 +160,21 @@
 {% endblock %}
 
 {% block stylesheet %}
-  <!-- bootstrap 3.0.2 -->
-  <link href="{% static 'adminLTE/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-  <!-- font Awesome -->
-  <link href="{% static 'adminLTE/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
-  <!-- Ionicons -->
-  <link href="{% static 'adminLTE/css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
-  <!-- Theme style -->
-  <link href="{% static 'adminLTE/css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
+<!-- bootstrap 3.0.2 -->
+<link href="{% static 'adminLTE/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- font Awesome -->
+<link href="{% static 'adminLTE/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- Ionicons -->
+<link href="{% static 'adminLTE/css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- Theme style -->
+<link href="{% static 'adminLTE/css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block javascript %}
-  <!-- jQuery 2.0.2 -->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-  <!-- Bootstrap -->
-  <script src="{% static 'adminLTE/js/bootstrap.min.js' %}" type="text/javascript"></script>
-  <!-- AdminLTE App -->
-  <script src="{% static 'adminLTE/js/AdminLTE/app.js' %}" type="text/javascript"></script>
+<!-- jQuery 2.0.2 -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="{% static 'adminLTE/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'adminLTE/js/AdminLTE/app.js' %}" type="text/javascript"></script>
 {% endblock %}

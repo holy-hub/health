@@ -3,6 +3,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
 from django.db import models
 
+from pharmacie.models import Pharmacie
+
 # Create your models here.
 class Utilisateur(User):
     SEX_CHOICES = (
@@ -11,34 +13,35 @@ class Utilisateur(User):
         ('BI', 'BISEXUEL'),
         ('N-G', 'NON-GENRE'),
     )
-    STATUS_CHOICE = (('patient', 'PATIENT'), ('medecin', 'MEDECIN'), ('pharmacien', 'PHARMACIEN'))
     mobile = models.CharField(max_length=20, blank=True, default="")
-    sexe = models.CharField(max_length=20, choices=SEX_CHOICES, default=SEX_CHOICES[0])
+    sexe = models.CharField(max_length=20, choices=SEX_CHOICES, default=SEX_CHOICES[0][0])
     address = models.CharField(max_length=20, default="")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICE, default=STATUS_CHOICE[0])
     deleted = models.BooleanField(default=False)
     image = models.FileField(upload_to="static/adminLTE/img/profile/", max_length=255, blank=True, default="static/adminLTE/img/avatar5.png")
+    is_patient = models.BooleanField(default=True)
+    is_medecin = models.BooleanField(default=False)
+    is_pharmacien = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.first_name} est un {self.status}."
+        return f"{self.username} est un.utilisateur."
 
-    def is_pharmacien(self):
-        return self.status == self.STATUS_CHOICE[2]
+    def is_state_pharmacien(self):
+        return self.is_pharmacien
 
-    def is_medecin(self):
-        return self.status == self.STATUS_CHOICE[1]
+    def is_state_medecin(self):
+        return self.is_medecin
 
-    def is_patient(self):
-        return self.status == self.STATUS_CHOICE[0]
+    def is_state_patient(self):
+        return self.is_patient
 
     def is_deleted(self):
         return self.deleted
     
-    def set_mededecin(self):
-        self.status = self.STATUS_CHOICE[1]
+    def set_medecin(self):
+        self.is_patient, self.is_medecin, self.is_pharmacien = False, True, False
 
     def set_pharmacien(self):
-        self.status = self.STATUS_CHOICE[2]
+        self.is_patient, self.is_medecin, self.is_pharmacien = False, False, True
 
     def archive(self):
         Archive.objects.create(content_object=self, archived_by=self).save()
@@ -55,14 +58,14 @@ class Patient(Utilisateur):
 
 class Pharmacien(Utilisateur):
     preuvePharmacien = models.FileField(upload_to="health/static/Pharmacien/")
-    pharmacie = models.ForeignKey('pharmacie.Pharmacie', verbose_name="Pharmacie", null=True, on_delete=models.CASCADE)
+    pharmacie = models.ForeignKey(Pharmacie, verbose_name="Pharmacie", related_name="pharmacien", null=True, on_delete=models.CASCADE)
     approuverPharmacien =  models.BooleanField(default=False, verbose_name="Validation du pharmacien")
 
     def __str__(self):
         return f"Pharmacien {self.first_name}"
 
     def save(self, *args, **kwargs):
-        self.status = self.STATUS_CHOICE[2]
+        self.set_pharmacien()
         super().save(*args, **kwargs)
 
 class Medecin(Utilisateur):
@@ -74,7 +77,7 @@ class Medecin(Utilisateur):
         return f"Medecin {self.first_name}"
 
     def save(self, *args, **kwargs):
-        self.status = self.STATUS_CHOICE[1]
+        self.set_medecin()
         super().save(*args, **kwargs)
 
 class Archive:

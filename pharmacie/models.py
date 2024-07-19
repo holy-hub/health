@@ -33,9 +33,9 @@ class Maladie(models.Model):
         return f"{self.nom} ayant {self.nom_scientiste} comme nom scientifique."
 
 class Medication(models.Model):
-    nom = models.CharField(max_length=250)
+    nom = models.CharField(max_length=250, unique=True)
     prix = models.PositiveIntegerField(default=0)
-    image = models.FileField(upload_to="image/produits/", max_length=255)
+    image = models.FileField(upload_to="image/produits/", max_length=255, blank=True)
     avantages = models.TextField(default="", max_length=255)
     inconvenients = models.TextField(default="", max_length=255)
 

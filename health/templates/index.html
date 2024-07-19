@@ -379,4 +379,16 @@
     </section><!-- End About Section -->
 
   </main>
+  {% if request.session.message %}
+  <!-- Toast-->
+  <div class="row  fixed-bottom">
+      <div class="toast show d-block ms-auto" style="display: none;">
+          <div class="toast-header"><u>Notification</u>
+              <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+          </div>
+          <div class="toast-body">{{ request.session.message }}</div>
+          <div class="toast-footer text-center">A l'instant</div>
+      </div>
+  </div>
+  {% endif %}
 {% endblock content %}

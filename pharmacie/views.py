@@ -1,20 +1,26 @@
+import random
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
-from authentification.models import Archive
+from authentification.models import Archive, Pharmacien
 from .models import *
 
 # Create your views here.
 # PHARMACIE
 # @login_required
 def dashboard(request):
-    pharmacie = Pharmacie.objects.get(pharmacien=request.user)
-    medications = pharmacie.medications
+    pharmacien = get_object_or_404(Pharmacien, request.user)
+    pharmacie = pharmacien.pharmacie
+    medications = pharmacie.medications.all()
+    maladies = list(Maladie.objects.all())
+    three_maladies = random.sample(maladies, 3) if len(maladies) > 3 else maladies
+
     context = {
         'title': 'Pharmacien ' + request.user.username,
         'nb_medocs': len(medications),
+        'maladies': three_maladies,
     }
-    return render(request, 'pharmacien/dashboard_ph.html', context)
+    return render(request, 'pharmacien/dashboard.html', context)
 
 # @login_required
 def creaPhar(request):
@@ -30,8 +36,8 @@ def creaPhar(request):
     }
     return render(request, 'pharmacien/create.html', context)
 
-def readPhar(request, pha_name):
-    pharmacie = Pharmacie.objects.get(nom=pha_name)
+def readPhar(request, id):
+    pharmacie = get_object_or_404(Pharmacie, pk=id)
     context = {
         'title'     : 'informations de Pharmacie',
         'pharmacie' : pharmacie,
@@ -47,9 +53,9 @@ def readAllPhar(request):
     return render(request, 'pharmacien/readAll.html', context)
 
 # @login_required
-def updPhar(request, pha_name):
+def updPhar(request, id):
     if request.method == "PUT":
-        pharmacie = Pharmacie.objects.get(nom=pha_name)
+        pharmacie = get_object_or_404(Pharmacie, pk=id)
         nom      = request.POST.get('nom', '')
         location = request.POST.get('location', '')
         description = request.POST.get('description', '')
@@ -59,19 +65,17 @@ def updPhar(request, pha_name):
             pharmacie.save()
             return redirect('dashboard_ph')
     context = {
-        'title'     : 'Mise a jour de Pharmacie',
+        'title' : 'Mise a jour de Pharmacie',
         'pharmacie' : pharmacie,
     }
     return render(request, 'pharmacien/update.html', context)
 
 # @login_required
-def delPhar(request, pha_name):
-    if request.method == "DEL":
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            ph = Pharmacie.objects.get(nom=pha_name)
-            Archive.objects.create(content_object=ph, archive_by=request.user)
-            ph.delete()
+def delPhar(request, id):
+    if request.method == "POST":
+        ph = get_object_or_404(Pharmacie, pk=id)
+        Archive.objects.create(content_object=ph, archive_by=request.user)
+        ph.delete()
 
 # MALADIE
 # @login_required
@@ -92,8 +96,8 @@ def creaIll(request):
     }
     return render(request, 'pharmacien/creaMal.html', context)
 
-def readIll(request, mal_name):
-    maladie = Maladie.objects.get(nom=mal_name)
+def readIll(request, id):
+    maladie = get_object_or_404(Maladie, pk=id)
     context = {
         'title' : 'informations de la Maladie',
         'maladie' : maladie,
@@ -109,9 +113,9 @@ def readAllIll(request):
     return render(request, 'pharmacien/readAllMal.html', context)
 
 # @login_required
-def updIll(request, mal_name):
+def updIll(request, id):
     if request.method == "PUT":
-        maladie = Maladie.objects.get(nom=mal_name)
+        maladie = get_object_or_404(Maladie, pk=id)
         nom = request.POST.get('nom', '')
         nom_scientiste = request.POST.get('nom_scientiste', '')
         symptomes = request.POST.get('symptomes', '')
@@ -131,13 +135,11 @@ def updIll(request, mal_name):
     return render(request, 'pharmacien/updateIll.html', context)
 
 # @login_required
-def delIll(request, mal_name):
-    if request.method == "DEL":
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            m = Maladie.objects.get(nom=mal_name)
-            Archive.objects.create(archived_by=request.user, content_object=m).save()
-            m.delete()
+def delIll(request, id):
+    if request.method == "POST":
+        m = get_object_or_404(Maladie, pk=id)
+        Archive.objects.create(archived_by=request.user, content_object=m).save()
+        m.delete()
 
 # MEDICATION
 # @login_required
@@ -149,15 +151,15 @@ def creaMedoc(request):
         avantages = request.POST.get('avantages', '')
         inconvenients = request.POST.get('inconvenients', '')
         
-        Pharmacie.objects.create(nom=nom, avantages=avantages, prix=prix, inconvenients=inconvenients, image=image).save()
+        Medication.objects.create(nom=nom, avantages=avantages, prix=prix, inconvenients=inconvenients, image=image).save()
         return redirect('dashboard_ph')
     context = {
         'title': 'Ajout de Medicament',
     }
     return render(request, 'pharmacien/creaMedoc.html', context)
 
-def readMedoc(request, medoc_name):
-    medicament = Medication.objects.get(nom=medoc_name)
+def readMedoc(request, id):
+    medicament = get_object_or_404(Medication, pk=id)
     context = {
         'title'      : 'informations de Medication',
         'medicament' : medicament,
@@ -173,9 +175,9 @@ def readAllMedoc(request):
     return render(request, 'pharmacien/readAllMedoc.html', context)
 
 # @login_required
-def updMedoc(request, medoc_name):
+def updMedoc(request, id):
     if request.method == "PUT":
-        medication = Medication.objects.get(nom=medoc_name)
+        medication = get_object_or_404(Medication, pk=id)
         nom  = request.POST.get('nom', '')
         prix = request.POST.get('prix', '')
         image = request.FILES.get('image', None)
@@ -193,10 +195,8 @@ def updMedoc(request, medoc_name):
     return render(request, 'pharmacien/updateMedoc.html', context)
 
 # @login_required
-def delMedoc(request, medoc_name):
-    if request.method == "DEL":
-        response = request.POST.get('response', '')
-        if response == 'yes':
-            m =Medication.objects.get(nom=medoc_name)
-            Archive.objects.create(content_object=m, archived_by=request.user).save()
-            m.delete()
+def delMedoc(request, id):
+    if request.method == "POST":
+        m =get_object_or_404(Medication, pk=id)
+        Archive.objects.create(content_object=m, archived_by=request.user).save()
+        m.delete()

@@ -15,20 +15,21 @@ class Appointement(models.Model):
     patient = models.ForeignKey(Patient, related_name='appointements_patient', verbose_name="Patient", on_delete=models.CASCADE)
     medecin = models.ForeignKey(Medecin, related_name='appointements_medecin', verbose_name="Medecin", on_delete=models.CASCADE)
     date_rdv = models.DateTimeField(blank=True, null=True)
+    motif = models.CharField(max_length=250, default="")
     create_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICE, default=STATUS_CHOICE[3])
+    status = models.CharField(max_length=50, choices=STATUS_CHOICE, default=STATUS_CHOICE[3][1])
     reminder_sent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Mr {self.patient.last_name} {self.patient.first_name} a demandé un rendez-vous au Docteur {self.medecin.first_name}"
+        return f"Mr {self.patient.last_name} {self.patient.first_name} a demandé un rendez-vous au Docteur {self.medecin.username}"
 
     def response(self, n):
         if 0 <= n >= 3:
-            self.status = self.STATUS_CHOICE[n]
+            self.status = self.STATUS_CHOICE[n][1]
             self.action()
 
     def action(self):
-        self.date_rdv = timezone.now() if self.status == self.STATUS_CHOICE[0] else None
+        self.date_rdv = timezone.now() if self.status == self.STATUS_CHOICE[0][1] else None
         if self.date_rdv is not None:
             self.send_reminder_email()
             self.reminder_sent = True
@@ -41,7 +42,7 @@ class Appointement(models.Model):
             )
         else:
             self.date_rdv = timezone.now()
-            if self.status == self.STATUS_CHOICE[1]:
+            if self.status == self.STATUS_CHOICE[1][1]:
                 send_mail(
                     "RENDEZ-VOUS REFUSÉ",
                     f"  Votre rendez-vous a ete refusé par le Dr {self.medecin.first_name} le {self.date_rdv.strftime('%d %B à %Hh%M')}.",
@@ -49,7 +50,7 @@ class Appointement(models.Model):
                     [self.patient.email],
                     fail_silently=False,
                 )
-            elif self.status == self.STATUS_CHOICE[2]:
+            elif self.status == self.STATUS_CHOICE[2][1]:
                 send_mail(
                     "RENDEZ-VOUS ANNULÉ",
                     f"  Vous avez annulé votre rendez-vous le {self.date_rdv.strftime('%d %B à %Hh%M')}.",

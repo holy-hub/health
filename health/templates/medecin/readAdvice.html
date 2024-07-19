@@ -1,0 +1,23 @@
+{% extends "medecin_base.html" %}
+{% block content %}
+
+
+
+
+        <div class="box box-primary">
+            <div class="box-header">
+
+                <h1>{{ advice.title }}</h1>
+                <p>{{ advice.content }}</p>
+                <p>Maladie: {{ advice.ill }}</p>
+                {% if advice.image %}
+                <img src="{{ advice.image.url }}" alt="{{ advice.title }}">
+                {% endif %}
+            </div>
+        </div>
+                
+{% endblock %}
+
+
+
+

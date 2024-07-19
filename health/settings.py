@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'medecin',
     'patient',
     'pharmacie',
+    'gestionAdmim',
     'django_celery_beat',
 ]
 

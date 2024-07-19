@@ -2,9 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 # Create your views here.
-def main_home(request):
+def main_home(request, message=''):
     context = {
         'title': 'Page d\'accueil',
+        'message': message,
     }
     return render(request, 'index.html', context)
 

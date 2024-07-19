@@ -2,7 +2,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 # from django.core.mail import send_mail
 from django.utils import timezone
 from .models import *
@@ -15,19 +15,20 @@ def dash(request):
             return redirect('dashboard_m')
         elif hasattr(user, 'pharmacien'):
             return redirect('dashboard_ph')
-    return redirect('dashboard_p')
+        return redirect('dashboard_p')
+    return redirect('home')
 
 def redirection(request):
     user = None
     if request.user.is_authenticated:
         try:
-            user = Patient.objects.get(first_name=request.user.first_name)
+            user = get_object_or_404(Patient, request.user.username)
         except Patient.DoesNotExist:
             try:
-                user = Medecin.objects.get(first_name=request.user.first_name)
+                user = get_object_or_404(Medecin, request.user.username)
             except Medecin.DoesNotExist:
                 try:
-                    user = Pharmacien.objects.get(first_name=request.user.first_name)
+                    user = get_object_or_404(Pharmacien, request.user.username)
                 except Pharmacien.DoesNotExist:
                     pass
         if user is not None:
@@ -39,10 +40,16 @@ def log_in(request):
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
 
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
+        utilisateur = authenticate(request, username=username, password=password)
+        if utilisateur is not None:
+            user = get_object_or_404(Utilisateur, id=utilisateur.id)
             login(request, user)
-            return dash(request)
+            if user.is_medecin:
+                return redirect('dashboard_m')
+            elif user.is_pharmacien:
+                return redirect('dashboard_ph')
+            else:
+                return redirect('dashboard_p')
         else:
             return render(request, 'auth/auth.html', {'error': 'Identifiants invalides'})
     return redirect('log')
@@ -96,9 +103,9 @@ def check_status(request, username, status):
         preuve = request.FILES.get('preuve', None)
 
         if  status == 'medecin':
-            user = Medecin.objects.get(username=username)
+            user = get_object_or_404(Medecin, username=username)
         elif status == 'pharmacien':
-            user = Pharmacien.objects.get(username=username)
+            user = get_object_or_404(Pharmacien, username=username)
 
         if user is not None:
             user.sexe = sexe
@@ -107,6 +114,9 @@ def check_status(request, username, status):
             user.mobile = mobile
             user.preuve = preuve
             user.save()
+            message = "Vous receivrez un message dans les jour a venir, le temps d'examiner votre document."
+            if message:
+                request.session['message'] = message # Transmettez le message à la page 'home' via la session
             return redirect('home')
         return redirect('log_hos')
     context = {

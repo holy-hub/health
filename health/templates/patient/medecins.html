@@ -2,130 +2,169 @@
 {% load static %}
 
 {% block stylesheet %}
-  <!-- bootstrap 3.0.2 -->
-  <link href="{% static 'adminLTE./css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-  <!-- font Awesome -->
-  <link href="{% static 'adminLTE./css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
-  <!-- Ionicons -->
-  <link href="{% static 'adminLTE./css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
-  <!-- DATA TABLES -->
-  <link href="{% static 'adminLTE./css/datatables/dataTables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
-  <!-- Theme style -->
-  <link href="{% static 'adminLTE./css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
+<!-- bootstrap 3.0.2 -->
+<link href="{% static 'adminLTE./css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- font Awesome -->
+<link href="{% static 'adminLTE./css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- Ionicons -->
+<link href="{% static 'adminLTE./css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- DATA TABLES -->
+<link href="{% static 'adminLTE./css/datatables/dataTables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+<!-- Theme style -->
+<link href="{% static 'adminLTE./css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block content %}
-  <!-- Content Header (Page header) -->
-  <section class="content-header">
-    <h1>
-      Tous les medecins
-      <small>toutes specialites</small>
-    </h1>
-    <ol class="breadcrumb">
-      <li>
-        <a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a>
-      </li>
-      <li>
-        <a href="#">Tables</a>
-      </li>
-      <li class="active">Medecins</li>
-    </ol>
-  </section>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Tous les medecins
+    <small>toutes specialites</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li>
+      <a href="{% url " home" %}"><i class="fa fa-dashboard"></i> Home</a>
+    </li>
+    <li>
+      <a href="#">Tables</a>
+    </li>
+    <li class="active">Medecins</li>
+  </ol>
+</section>
 
-  <!-- Main content -->
-  <section class="content">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="box">
-          <div class="box-header">
-            <h3 class="box-title">Table de donnees des medecins</h3>
-          </div>
-          <!-- /.box-header -->
-          <div class="box-body table-responsive">
-            <table id="example1" class="table table-bordered table-striped table-hover">
-              <thead>
-                <tr>
-                  <th>*</th>
-                  <th>Nom</th>
-                  <th>Specialte</th>
-                  <th>Mobile</th>
-                  <th>adresse</th>
-                  <th>email</th>
-                  <th>prendre rendez-vous</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for med in medecins %}
-                  <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ med.first_name|capfirst }} {{ med.last_name|upper }}</td>
-                    <td>{{ med.speciality.nom }}</td>
-                    <td>{{ med.mobile }}</td>
-                    <td>{{ med.address }}</td>
-                    <td>{{ med.email }}</td>
-                    <td>
-                      <form action="{% url "ask_appointement" med.username %}" method="post">
-                        <button class="btn btn-info"><i class="fa fa-dashboard"></i></button>
-                      </form>
-                    </td>
-                  </tr>
-                {% empty %}
-                  <tr>
-                    <td>0</td>
-                    <td>john DOE</td>
-                    <td>Grand Chirurgien</td>
-                    <td>+228 22 22 22 25</td>
-                    <td>Lome</td>
-                    <td>johndoe@gmail.com</td>
-                    <td>o-o</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>*</th>
-                  <th>Nom</th>
-                  <th>Specialte</th>
-                  <th>Mobile</th>
-                  <th>adresse</th>
-                  <th>email</th>
-                  <th>prendre rendez-vous</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <!-- /.box-body -->
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Table de donnees des medecins</h3>
         </div>
-        <!-- /.box -->
+        <!-- /.box-header -->
+        <div class="box-body table-responsive">
+          <table id="example1" class="table table-bordered table-striped table-hover">
+            <thead>
+              <tr>
+                <th>*</th>
+                <th>Nom</th>
+                <th>Specialte</th>
+                <th>Mobile</th>
+                <th>adresse</th>
+                <th>email</th>
+                <th>prendre rendez-vous</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for med in medecins %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ med.first_name|capfirst }} {{ med.last_name|upper }}</td>
+                <td>{{ med.speciality.nom }}</td>
+                <td>{{ med.mobile }}</td>
+                <td>{{ med.address }}</td>
+                <td>{{ med.email }}</td>
+                <td>
+                  <form action="{% url " ask_appointement" med.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-info" title="Prise de rendez-vous" data-bs-toggle="modal"
+                      data-bs-target="#myModal{{ forloop.counter }}"><i class="fa fa-user"></i></button>
+                  </form>
+                </td>
+              </tr>
+              <!-- The Modal -->
+              <div class="modal" id="myModal{{ forloop.counter }}">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Motif</h4>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <form action="{% url " motif" %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="motif" placeholder="motif">
+                      </form>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <tr>
+                <td>0</td>
+                <td>john DOE</td>
+                <td>Grand Chirurgien</td>
+                <td>+228 22 22 22 25</td>
+                <td>Lome</td>
+                <td>johndoe@gmail.com</td>
+                <td><button type="button" class="btn btn-info"><i class="fa fa-edit"></i></button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>*</th>
+                <th>Nom</th>
+                <th>Specialte</th>
+                <th>Mobile</th>
+                <th>adresse</th>
+                <th>email</th>
+                <th>prendre rendez-vous</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <!-- /.box-body -->
       </div>
+      <!-- /.box -->
     </div>
-  </section>
-  <!-- /.content -->
+  </div>
+</section>
+<!-- /.content -->
 {% endblock %}
 
 {% block javascript %}
-  <!-- jQuery 2.0.2 -->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-  <!-- Bootstrap -->
-  <script src="{% static 'adminLTE/js/bootstrap.min.js' %}" type="text/javascript"></script>
-  <!-- DATA TABES SCRIPT -->
-  <script src="{% static 'adminLTE/js/plugins/datatables/jquery.dataTables.js' %}" type="text/javascript"></script>
-  <script src="{% static 'adminLTE/js/plugins/datatables/dataTables.bootstrap.js' %}" type="text/javascript"></script>
-  <!-- AdminLTE App -->
-  <script src="{% static 'adminLTE/js/AdminLTE/app.js' %}" type="text/javascript"></script>
+<!-- jQuery 2.0.2 -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="{% static 'adminLTE/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<!-- DATA TABES SCRIPT -->
+<script src="{% static 'adminLTE/js/plugins/datatables/jquery.dataTables.js' %}" type="text/javascript"></script>
+<script src="{% static 'adminLTE/js/plugins/datatables/dataTables.bootstrap.js' %}" type="text/javascript"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'adminLTE/js/AdminLTE/app.js' %}" type="text/javascript"></script>
 
-  <!-- page script -->
-  <script type="text/javascript">
-    $(function () {
-      $('#example1').dataTable()
-      $('#example2').dataTable({
-        bPaginate: true,
-        bLengthChange: false,
-        bFilter: false,
-        bSort: true,
-        bInfo: true,
-        bAutoWidth: false
-      })
+<!-- page script -->
+<script type="text/javascript">
+  $(function () {
+    $('#example1').dataTable()
+    $('#example2').dataTable({
+      bPaginate: true,
+      bLengthChange: false,
+      bFilter: false,
+      bSort: true,
+      bInfo: true,
+      bAutoWidth: false
     })
-  </script>
+  })
+</script>
 {% endblock %}
+
+{% block script %}
+<script>
+  setTimeout(function () {
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+    })
+  }, 5000);
+</script>
+{% endblock script %}

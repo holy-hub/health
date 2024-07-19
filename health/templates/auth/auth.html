@@ -41,7 +41,7 @@
         <form class="form form-signup" action="{% url "log_on" %}" method="POST">
           {% csrf_token %}
           <fieldset>
-            <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+            <legend>Please, enter your email, password and username confirmation for sign up.</legend>
             <div class="input-block">
               <label>E-mail</label>
               <input id="signup-email" type="email" name="email" required />

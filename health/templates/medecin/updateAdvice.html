@@ -1,0 +1,44 @@
+
+
+
+{% extends "medecin_base.html" %}
+{% block content %}
+
+<div class="box box-primary">
+    <div class="box-header">
+        <form role="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="title">Titre:</label>
+                    <input type="text" id="title" name="title" value="{{ advice.title }}" required><br>
+                </div>
+                <div class="form-group">
+                    <label for="content">Contenu:</label>
+    <textarea id="content" name="content" required>{{ advice.content }}</textarea><br>
+                </div> 
+                <div class="form-group">
+                    <label for="ill">Maladie:</label>
+    <input type="text" id="ill" name="ill" value="{{ advice.ill }}" required><br>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" id="image" name="image"><br>
+                </div>
+                
+            
+            </div><!-- /.box-body -->
+
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Mettre à jour </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+

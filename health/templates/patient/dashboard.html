@@ -23,13 +23,14 @@
       <!-- small box -->
       <div class="small-box bg-aqua">
         <div class="inner"><!--nombres-de-rdv -->
-          <h3>150</h3>
+          <h3>{{ nb_rdv }}</h3>
           <p>Mes demandes de rendez-vous </p>
         </div>
         <div class="icon">
           <i class="ion ion-bag"></i>
         </div>
-        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{% url " my_appointement" %}" class="small-box-footer">More info <i
+            class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <!-- ./col -->
@@ -37,13 +38,14 @@
       <!-- small box -->
       <div class="small-box bg-green">
         <div class="inner">
-          <h3>53<sup style="font-size: 20px">%</sup></h3>
-          <p>Bounce Rate</p>
+          <h3>{{ nb_rdv_a }}<sup style="font-size: 20px">%</sup></h3>
+          <p>Rendez-vous Acceptés</p>
         </div>
         <div class="icon">
           <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{% url " my_appointement" %}" class="small-box-footer">More info <i
+            class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <!-- ./col -->
@@ -51,13 +53,14 @@
       <!-- small box -->
       <div class="small-box bg-yellow">
         <div class="inner">
-          <h3>44</h3>
-          <p>User Registrations</p>
+          <h3>{{ nb_rdv_r }}</h3>
+          <p>Rendez-vous refusés</p>
         </div>
         <div class="icon">
           <i class="ion ion-person-add"></i>
         </div>
-        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{% url " my_appointement" %}" class="small-box-footer">More info <i
+            class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <!-- ./col -->
@@ -65,13 +68,14 @@
       <!-- small box -->
       <div class="small-box bg-red">
         <div class="inner">
-          <h3>65</h3>
-          <p>Unique Visitors</p>
+          <h3>{{ nb_rdv_an }}</h3>
+          <p>Rendez-vous Annulés</p>
         </div>
         <div class="icon">
           <i class="ion ion-pie-graph"></i>
         </div>
-        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{% url " my_appointement" %}" class="small-box-footer">More info <i
+            class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <!-- ./col -->
@@ -80,7 +84,7 @@
 
   <!-- top row -->
   <div class="row">
-    <div class="col-xs-6 connectedSortable">
+    <section class="col-xs-6 connectedSortable">
       <!-- Calendar -->
       <div class="box box-warning">
         <div class="box-header">
@@ -94,10 +98,10 @@
               <button class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown"><i
                   class="fa fa-bars"></i></button>
               <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href="{% url "calendar" %}">Add new event</a></li>
-                <li><a href="{% url "calendar" %}">Clear events</a></li>
+                <li><a href="{% url " calendar" %}">Add new event</a></li>
+                <li><a href="{% url " calendar" %}">Clear events</a></li>
                 <li class="divider"></li>
-                <li><a href="{% url "calendar" %}">View calendar</a></li>
+                <li><a href="{% url " calendar" %}">View calendar</a></li>
               </ul>
             </div>
           </div><!-- /. tools -->
@@ -114,11 +118,12 @@
           <h3 class="box-title">Quick Email</h3>
           <!-- tools box -->
           <div class="pull-right box-tools">
-            <button class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+            <button class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i
+                class="fa fa-times"></i></button>
           </div><!-- /. tools -->
         </div>
         <div class="box-body">
-          <form action="{% url "coming_soon" %}" method="post">
+          <form action="{% url " coming_soon" %}" method="post">
             <div class="form-group">
               <input type="email" class="form-control" name="emailto" placeholder="Email to:" />
             </div>
@@ -136,11 +141,41 @@
               class="fa fa-arrow-circle-right"></i></button>
         </div>
       </div>
-    </div>
+    </section>
     <!-- /.col -->
 
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
     <section class="col-lg-6 connectedSortable">
+      <div class="box box-success">
+        <div class="box-header">
+          <h3 class="box-title">Rendez-vous Acceptés</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <table class="table table-bordered">
+            <tr>
+              <th style="width: 10px">#</th>
+              <th>Patient</th>
+              <th>Motif</th>
+              <th>Date</th>
+            </tr>
+            {% for rdv in rdva %}
+            <tr>
+              <td>{{ forloop.counter }}.</td>
+              <td>{{ rdv.patient.username }}</td>
+              <td>{{ rdv.motif }}</td>
+              <td>{{ rdv.date_rdv|date }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td>0.</td>
+              <td>Update software</td>
+              <td>Mot de tete</td>
+              <td>Demain</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div><!-- /.box-body -->
+      </div><!-- /.box -->
       <!-- Chat box -->
       <div class="box box-success">
         <div class="box-header">
@@ -154,14 +189,13 @@
           </div>
         </div>
         <div class="box-body chat" id="chat-box">
-          <div class="item">COMING SOON</div>
-          <!-- chat item
+          <!-- chat item -->
           <div class="item">
-            <img src="img/avatar3.png" alt="user image" class="offline" />
+            <img src="{% static 'adminLTE/img/avatar3.png' %}" alt="user image" class="offline" />
             <p class="message">
               <a href="#" class="name">
-                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:30</small>
-                Susan Doe
+                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 05:30</small>
+                Health HEALTHY
               </a>
               I would like to meet you to discuss the latest news about
               the arrival of the new theme. They say it is going to be one the

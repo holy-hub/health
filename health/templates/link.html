@@ -36,9 +36,6 @@
 </head>
 
 <body id="app" class="skin-black" style="scroll-behavior: smooth; transition: all 5s ease-in-out;">
-    {% if message %}
-    <!-- Pop-Up-->
-    {% endif %}
     {% block body %}{% endblock %}
 
     {% block javascript %}
@@ -77,26 +74,24 @@
     <script src="{% static 'adminLTE/js/AdminLTE/dashboard.js' %}" type="text/javascript"></script>
     {% endblock %}
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var appElement = document.getElementById('app');
-            if (appElement) {
-                appElement.style.display = 'none';
-                setTimeout(function () {
-                    appElement.style.display = '';
-                    appElement.style.opacity = 0;
-                    var fadeEffect = setInterval(function () {
-                        if (appElement.style.opacity < 1) {
-                            appElement.style.opacity = parseFloat(appElement.style.opacity) + 0.1;
-                        } else {
-                            clearInterval(fadeEffect);
-                        }
-                    }, 10);
-                }, 0);
-            }
-
-            window.addEventListener('beforeunload', function (event) {
+        $(document).ready(function () {
+            $('#app').hide().fadeIn('slow');
+            $(window).on('beforeunload', function() {
                 window.location.href = "{% url 'check_user_activity' %}";
             });
+
+            var message = new URLSearchParams(window.location.search).get('message');
+            if (message) {
+                var toast = $('.toast');
+                $('.toast-body').text(message);
+                toast.fadeIn('slow', function () {
+                    setTimeout(function () {
+                        toast.slideUp('slow', function () {
+                            toast.hide();
+                        });
+                    }, 30000); // 30 secondes
+                });
+            } toast.hide();
         });
     </script>
     <!-- JQuery script here -->
