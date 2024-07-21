@@ -1,5 +1,6 @@
 {% extends 'link.html' %}
 {% load static %}
+
 {% block stylesheet %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,13 +12,13 @@
     <div class="forms">
       <div class="form-wrapper is-active">
         <button type="button" class="switcher switcher-login">
-          Login
+          <a href="{% url "home" %}" class="nav-item" style="color: antiquewhite;">Home</a> | Login
           <span class="underline"></span>
         </button>
         {% if error %}
         <div class="alert alert-danger d-block m-auto">{{ error }}</div>
         {% endif %}
-        <form class="form form-login" action="{% url "log_in" %}" method="POST">
+        <form class="form form-login" action="{% url "connex" %}" method="POST">
           {% csrf_token %}
           <fieldset>
             <legend>Please, enter your username and password for login.</legend>

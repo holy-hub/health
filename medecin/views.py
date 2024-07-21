@@ -13,14 +13,9 @@ def dashboard(request):
         'title': 'Medecin ' + medecin.username,
         'rdvs': rdvs,
         'rdva': rdva,
-        'date': request.user.date_joined.strftime('%b %Y'),
+        'date': medecin.date_joined.strftime('%b %Y'),
     }
     return render(request, 'medecin/dashboard.html', context)
-
-@login_required
-def accepte(request, id):
-    rdv = get_object_or_404(Appointement, pk=id)
-    rdv.response(0)
 
 @login_required
 def refuse(request, id):
@@ -28,12 +23,26 @@ def refuse(request, id):
     rdv.response(1)
     return redirect('dashboard_m')
 
+@login_required
 def prevu(request, id):
+    rdv = get_object_or_404(Appointement, pk=id)
     if request.method == 'POST':
-        rdv = get_object_or_404(Appointement, pk=id)
         date = request.POST.get('date')
-        rdv.date_rdv = date
-        return redirect('dashboard_m')
+        if date:
+            rdv.date_rdv = date
+            rdv.status = rdv.STATUS_CHOICE[0][1]  # Set status to "accepté"
+            rdv.save()
+    return redirect('dashboard_m')
+
+@login_required
+def uPrevu(request, id):
+    rdv = get_object_or_404(Appointement, pk=id)
+    if request.method == 'POST':
+        date = request.POST.get('date')
+        if date:
+            rdv.date_rdv = date
+            rdv.save()
+    return redirect('dashboard_m')
 
 """
     Hospital CRUD

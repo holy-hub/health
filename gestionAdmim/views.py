@@ -10,13 +10,16 @@ def log_in(request):
     if request.method == 'POST':
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
-
+        print(username, password)
         user = authenticate(request, username=username, password=password)
+        print(f"\n{username}, {password}\n{user}\n")
         if user is not None:
-            login(request, user)
-            return redirect('dashboard_adm')
+            user = User.objects.get(username=username)
+            if user.is_staff:
+                login(request, user)
+        return redirect('dashboard_adm')
     context = {
-        'title': 'Admin Login'
+        'title': 'Admin Login',
     }
     return render(request, 'adm/auth.html', context)
 
@@ -27,32 +30,43 @@ def sign(request):
         password = request.POST.get('password')
         password = make_password(password)
 
-        user = User.objects.create_superuser(username=username, email=email, password=password)
+        user = User.objects.create(username=username, email=email, password=password)
+        user.is_staff = True
+        user.is_superuser = True
         user.save()
-        return redirect('dashboard_adm')
-    return redirect('connnex')
+        # return redirect('dashboard_adm')
+    return redirect('connex')
 
 def dashboard_adm(request):
-    ph = Pharmacien.objects.filter(approuverPharmacien=False).all()
-    med = Medecin.objects.filter(approuverMedecin=False).all()
+    ph = Pharmacien.objects.filter(approuverPharmacien=False, verifierPharmacien=False).all()
+    med = Medecin.objects.filter(approuverMedecin=False, verifierMedecin=False).all()
 
     context = {
-        'title': 'Approuver profils',
+        'title': 'Profils',
         'pharmaciens': ph,
         'medecins': med,
     }
-    return render(request, 'approuve.html', context)
+    return render(request, 'adm/dashboard.html', context)
 
 def approve(request, status, id):
+    if status == 'medecin':
+        profile = get_object_or_404(Medecin, pk=id)
+    else:
+        profile = get_object_or_404(Pharmacien, pk=id)
+
     if request.method == 'POST':
-        if status == 'medecin':
-            response = request.POST.get('response', '')
-            if response == 'yes':
-                m = get_object_or_404(Medecin, pk=id)
-                if m: m.approuverMedecin = True
-        elif status == 'pharmacien':
-            response = request.POST.get('response', '')
-            if response == 'yes':
-                p = get_object_or_404(Pharmacien, pk=id)
-                if p: p.approuverPharmacien = True
-    return redirect('dashboard_adm')
+        response = request.POST.get('response', '')
+        if status == "medecin":
+            profile.verifierMedecin = True
+            profile.approuverMedecin = (response == 'yes')
+        else:
+            profile.verifierPharmacien = True
+            profile.approuverPharmacien = (response == 'yes')
+        profile.save()
+        return redirect('dashboard_adm')
+    context = {
+        'title': 'ApprobatioApprobation ADMIN',
+        'm': profile, 
+        's': status,
+    }
+    return render(request, 'adm/approuve.html', context)

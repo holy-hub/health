@@ -23,7 +23,7 @@
   </h1>
   <ol class="breadcrumb">
     <li>
-      <a href="{% url " home" %}"><i class="fa fa-dashboard"></i> Home</a>
+      <a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a>
     </li>
     <li>
       <a href="#">Tables</a>
@@ -64,7 +64,7 @@
                 <td>{{ med.address }}</td>
                 <td>{{ med.email }}</td>
                 <td>
-                  <form action="{% url " ask_appointement" med.id %}" method="post">
+                  <form action="{% url "ask_appointement" med.id %}" method="post">
                     {% csrf_token %}
                     <button class="btn btn-info" title="Prise de rendez-vous" data-bs-toggle="modal"
                       data-bs-target="#myModal{{ forloop.counter }}"><i class="fa fa-user"></i></button>
@@ -84,9 +84,10 @@
 
                     <!-- Modal body -->
                     <div class="modal-body">
-                      <form action="{% url " motif" %}" method="post">
+                      <form action="{% url "motif" %}" method="post">
                         {% csrf_token %}
                         <input type="text" name="motif" placeholder="motif">
+                        <button type="submit" class="btn btn-success">Submit</button>
                       </form>
                     </div>
 

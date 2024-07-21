@@ -60,6 +60,7 @@ class Pharmacien(Utilisateur):
     preuvePharmacien = models.FileField(upload_to="health/static/Pharmacien/")
     pharmacie = models.ForeignKey(Pharmacie, verbose_name="Pharmacie", related_name="pharmacien", null=True, on_delete=models.CASCADE)
     approuverPharmacien =  models.BooleanField(default=False, verbose_name="Validation du pharmacien")
+    verifierPharmacien =  models.BooleanField(default=False, verbose_name="verification du pharmacien")
 
     def __str__(self):
         return f"Pharmacien {self.first_name}"
@@ -71,7 +72,8 @@ class Pharmacien(Utilisateur):
 class Medecin(Utilisateur):
     preuveMedecin = models.FileField(upload_to='health/static/Medecin/')
     speciality = models.ForeignKey("medecin.Speciality", verbose_name="Specialite du medecin", null=True, on_delete=models.CASCADE)
-    approuverMedecin =  models.BooleanField(default=False, verbose_name="Validation du medecin")
+    approuverMedecin = models.BooleanField(default=False, verbose_name="Validation du medecin")
+    verifierMedecin = models.BooleanField(default=False, verbose_name="verification du medecin")
 
     def __str__(self):
         return f"Medecin {self.first_name}"

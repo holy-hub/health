@@ -22,7 +22,7 @@
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3>
-                        {% if request.user.pharmacie.nom %}{{ request.user.pharmacie.nom }}
+                        {% if pharmacie %}{{ pharmacie }}
                         {% else %}Ma Pharmacie
                         {% endif %}
                     </h3>

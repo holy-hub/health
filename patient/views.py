@@ -23,7 +23,6 @@ def dashboard(request):
         'nb_rdv_r': nb_rdv_r,
         'nb_rdv_an': nb_rdv_an,
         'rdv_a': rdv_a,
-        
     }
     return render(request, 'patient/dashboard.html', context)
 

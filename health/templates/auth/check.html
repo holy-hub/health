@@ -8,30 +8,28 @@
         {% csrf_token %}
         <div class="body bg-gray">
             <div class="form-group">
-                <input type="text" name="sexe" class="form-control" placeholder="Sexe" list="sex"/>
+                <input type="text" name="sexe" class="form-control" placeholder="Sexe" list="sex" required/>
                 <datalist id="sex">
                     <option value="Masculin">
                     <option value="Feminin">
                 </datalist>
             </div>
             <div class="form-group">
-                <input type="text" name="last_name" class="form-control" placeholder="Prenom"/>
+                <input type="text" name="last_name" class="form-control" placeholder="Prenom" required/>
             </div>
             <div class="form-group">
-                <input type="text" name="first_name" class="form-control" placeholder="Nom"/>
+                <input type="text" name="first_name" class="form-control" placeholder="Nom" required/>
             </div>
             <div class="form-group">
-                <input type="tel" name="mobile" class="form-control" placeholder="Telephone"/>
+                <input type="tel" name="mobile" class="form-control" placeholder="Telephone" required/>
             </div>
             <div class="form-group">
-                <label for="preuve">Document Preuve {{ status|capfirst }} </label>
-                <input type="file" name="preuve" class="form-control" />
+                <label for="preuve">Document : Attestation ou Diplome {{ status|capfirst }} </label>
+                <input type="file" name="preuve" class="form-control" required/>
             </div>
         </div>
         <div class="footer">
-
             <button type="submit" class="btn bg-olive btn-block">Sign me up</button>
-
             <a href="{% url "log_hos" %}" class="text-center">I already have a membership</a>
         </div>
     </form>

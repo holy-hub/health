@@ -1,4 +1,5 @@
 {% extends 'patient_base.html' %}
+{% load static %}
 
 {% block content %}
   <!-- Content Header (Page header) -->
@@ -23,6 +24,7 @@
     </h4>
 
     <!-- Small boxes (Stat box) Rdv Accepte -->
+    {% if rdv_acceptes %}
     <div class="row">
       <h4>Acceptes</h4>
       {% for ac in rdv_acceptes %}
@@ -31,20 +33,22 @@
           <div class="small-box bg-blue">
             <div class="inner">
               <h3>{{ ac.medecin.username|capfirst }}</h3>
-              <p>Demande le: {{ ac.create_at.strftime('%A, le %d %B %Y') }}</p>
-              <p>Prevu pour le: {{ ac.date_rdv.strftime('%A, le %d %B %Y') }}</p>
+              <p>Demande le: {{ ac.create_at|date }}</p>
+              <p>Prevu pour le: {{ ac.date_rdv|date }}</p>
             </div>
             <div class="icon">
               <i class="ion ion-ios7-cart-outline"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ ac.medecin.speciality|upper }} - {{ ac.medecin.hopitaux.first().nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
+            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ ac.medecin.speciality|upper }} - {{ ac.medecin.hopitaux.nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
           </div>
         </div>
         <!-- ./col -->
       {% endfor %}
     </div>
+    {% endif %}
     <!-- /.row -->
     <!-- Small boxes (Stat box) Rdv En attente -->
+    {% if rdv_en_attentes %}
     <div class="row">
       <h4>En attente</h4>
       {% for att in rdv_en_attentes %}
@@ -53,19 +57,21 @@
           <div class="small-box bg-purple">
             <div class="inner">
               <h3>{{ att.medecin.username|capfirst }}</h3>
-              <p>Demande le: {{ att.create_at.strftime('%A, le %d %B %Y') }}</p>
+              <p>Demande le: {{ att.create_at|date }}</p>
             </div>
             <div class="icon">
               <i class="ion ion-ios7-briefcase-outline"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ att.medecin.speciality|upper }} - {{ att.medecin.hopitaux.first().nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
+            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ att.medecin.speciality|upper }} - {{ att.medecin.hopitaux.nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
           </div>
         </div>
       {% endfor %}
       <!-- ./col -->
     </div>
+    {% endif %}
     <!-- /.row -->
     <!-- Small boxes (Stat box) Rdv Annule -->
+    {% if rdv_annules %}
     <div class="row">
       <h4>Annule</h4>
       {% for ann in rdv_annules %}
@@ -74,20 +80,22 @@
           <div class="small-box bg-purple">
             <div class="inner">
               <h3>{{ ann.medecin.username|capfirst }}</h3>
-              <p>Demande le: {{ ann.create_at.strftime('%A, le %d %B %Y') }}</p>
-              <p>Annule le: {{ ann.date_rdv.strftime('%A, le %d %B %Y') }}</p>
+              <p>Demande le: {{ ann.create_at|date }}</p>
+              <p>Annule le: {{ ann.date_rdv|date }}</p>
             </div>
             <div class="icon">
               <i class="ion ion-ios7-briefcase-outline"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ ann.medecin.speciality|upper }} - {{ ann.medecin.hopitaux.first().nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
+            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ ann.medecin.speciality|upper }} - {{ ann.medecin.hopitaux.nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
           </div>
         </div>
       {% endfor %}
       <!-- ./col -->
     </div>
+    {% endif %}
     <!-- /.row -->
     <!-- Small boxes (Stat box) Rdv Refuse -->
+    {% if rdv_refuses %}
     <div class="row">
       <h4>Refuse</h4>
       {% for ref in rdv_refuses %}
@@ -96,18 +104,19 @@
           <div class="small-box bg-purple">
             <div class="inner">
               <h3>{{ ref.medecin.username|capfirst }}</h3>
-              <p>Demande le: {{ ref.create_at.strftime('%A, le %d %B %Y') }}</p>
-              <p>Refuse le: {{ ref.date_rdv.strftime('%A, le %d %B %Y') }}</p>
+              <p>Demande le: {{ ref.create_at|date }}</p>
+              <p>Refuse le: {{ ref.date_rdv|date }}</p>
             </div>
             <div class="icon">
               <i class="ion ion-ios7-briefcase-outline"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ ref.medecin.speciality|upper }} - {{ ref.medecin.hopitaux.first().nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
+            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i>{{ ref.medecin.speciality|upper }} - {{ ref.medecin.hopitaux.nom|capfirst }}<i class="fa fa-arrow-circle-left"></i></a>
           </div>
         </div>
       {% endfor %}
       <!-- ./col -->
     </div>
+    {% endif %}
     <!-- /.row -->
 
     <h4 class="page-header">
@@ -129,12 +138,9 @@
           <div class="box-body">
             Box class: <code>.box.box-solid.box-danger</code>
             <p>amber, microbrewery abbey hydrometer, brewpub ale lauter tun saccharification oxidized barrel. berliner weisse wort chiller adjunct hydrometer alcohol aau! sour/acidic sour/acidic chocolate malt ipa ipa hydrometer.</p>
-          </div>
-          <!-- /.box-body -->
-        </div>
-        <!-- /.box -->
-      </div>
-      <!-- /.col -->
+          </div><!-- /.box-body -->
+        </div><!-- /.box -->
+      </div><!-- /.col -->
 
       <div class="col-md-4">
         <!-- Success box -->
@@ -184,16 +190,16 @@
     </h4>
     <!-- Solid boxes -->
     <div class="row">
+      {% if maladies %}
       <div class="col-md-4">
         <!-- Navy tile -->
         <div class="box box-solid bg-navy">
           <div class="box-header">
-            <h3 class="box-title">{{ maladies[0].nom|upper }}</h3>
+            <h3 class="box-title">{{ maladies.0.nom|upper }}</h3>
           </div>
           <div class="box-body">
-            <u>Nom Scientifique</u>: <code>{{ maladies[0].nom_scientiste }}</code>
-            <p>{{ maladies[0].symptomes }}</p>
-            <small class="pull-right">{{ maladies[0].disease_types }}</small>
+            <u>Nom Scientifique</u>: <code>{{ maladies.0.nom_scientiste }}</code>
+            <p>{{ maladies.0.symptomes }}</p>
           </div>
           <!-- /.box-body -->
         </div>
@@ -205,12 +211,11 @@
         <!-- Purple tile -->
         <div class="box box-solid bg-purple">
           <div class="box-header">
-            <h3 class="box-title">{{ maladies[1].nom|upper }}</h3>
+            <h3 class="box-title">{{ maladies.1.nom|upper }}</h3>
           </div>
           <div class="box-body">
-            <u>Nom Scientifique</u>: <code>{{ maladies[1].nom_scientiste }}</code>
-            <p>{{ maladies[1].symptomes }}</p>
-            <small class="pull-right">{{ maladies[1].disease_types }}</small>
+            <u>Nom Scientifique</u>: <code>{{ maladies.1.nom_scientiste }}</code>
+            <p>{{ maladies.1.symptomes }}</p>
           </div>
           <!-- /.box-body -->
         </div>
@@ -222,18 +227,37 @@
         <!-- Maroon tile -->
         <div class="box box-solid bg-maroon">
           <div class="box-header">
-            <h3 class="box-title">{{ maladies[2].nom|upper }}</h3>
+            <h3 class="box-title">{{ maladies.2.nom|upper }}</h3>
           </div>
           <div class="box-body">
-            Nom Scientifique: <code>{{ maladies[2].nom_scientiste }}</code>
-            <p>{{ maladies[2].symptomes }}</p>
-            <small class="pull-right">{{ maladies[2].disease_types }}</small>
+            <u>Nom Scientifique</u>: <code>{{ maladies.2.nom_scientiste }}</code>
+            <p>{{ maladies.2.symptomes }}</p>
           </div>
           <!-- /.box-body -->
         </div>
         <!-- /.box -->
       </div>
       <!-- /.col -->
+      {% else %}
+      <div class="col-md-6">
+        <!-- Navy tile -->
+        <div class="box box-solid bg-navy" style="height: 100%;">
+          <div class="box-header">
+            <h3 class="box-title">LA FIEVRE TYPHOIDE</h3>
+          </div>
+          <div class="box-body">
+            <u>Nom Scientifique</u>: <code>TYPHOID FEVER</code>
+            <small class="pull-right">Tres dangereux</small>
+            <p>SYMPTOMES: Ils comprennent une forte fièvre persistante, des maux de tête, une fatigue intense, des douleurs abdominales, une perte d'appétit, une constipation, une éruption cutanée rose et des douleurs musculaires.</p>
+            <p>
+            </p>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+      </div>
+      <!-- /.col -->
+      {% endif %}
     </div>
     <!-- /.row -->
   </section>

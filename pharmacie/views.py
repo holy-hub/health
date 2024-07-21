@@ -1,35 +1,59 @@
 import random
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 
-from authentification.models import Archive, Pharmacien
+from authentification.models import Archive, Pharmacien, Utilisateur
 from .models import *
 
 # Create your views here.
+def is_patient(user):
+    user = Utilisateur.objects.get(id=user.id)
+    return user.is_patient
+
+def is_doctor(user):
+    user = Utilisateur.objects.get(id=user.id)
+    return user.is_medecin
+
+def is_pharmacist(user):
+    user = Utilisateur.objects.get(id=user.id)
+    return user.is_pharmacien
+
 # PHARMACIE
-# @login_required
+@user_passes_test(is_pharmacist)
+@login_required
 def dashboard(request):
-    pharmacien = get_object_or_404(Pharmacien, request.user)
-    pharmacie = pharmacien.pharmacie
-    medications = pharmacie.medications.all()
+    try:
+        pharmacien = get_object_or_404(Pharmacien, pk=request.user.id)
+        medications = pharmacien.pharmacie.medications.all() if pharmacien.pharmacie else []
+    except Pharmacien.DoesNotExist:
+        # Handle the case where the Pharmacien object does not exist
+        medications = []
     maladies = list(Maladie.objects.all())
     three_maladies = random.sample(maladies, 3) if len(maladies) > 3 else maladies
 
     context = {
-        'title': 'Pharmacien ' + request.user.username,
+        'title': 'Pharmacien ' + pharmacien.username,
+        'pharmaie': pharmacien.pharmacie,
         'nb_medocs': len(medications),
         'maladies': three_maladies,
     }
     return render(request, 'pharmacien/dashboard.html', context)
 
-# @login_required
+@user_passes_test(is_pharmacist)
+@login_required
 def creaPhar(request):
     if request.method == "POST":
         nom = request.POST.get('nom', '')
         location = request.POST.get('location', '')
         description = request.POST.get('description', '')
+        ph = get_object_or_404(Pharmacien, pk=request.user.id)
         
-        Pharmacie.objects.create(nom=nom, location=location, description=description, pharmacien=request.user).save()
+        if ph.pharmacie:
+            pass
+        else:
+            pcie = Pharmacie.objects.create(nom=nom, location=location, description=description, pharmacien=request.user).save()
+            if request.user.is_authenticated:
+                ph.pharmacie = pcie
         return redirect('dashboard_ph')
     context = {
         'title': 'Ajout de Pharmacie',
@@ -52,25 +76,28 @@ def readAllPhar(request):
     }
     return render(request, 'pharmacien/readAll.html', context)
 
-# @login_required
-def updPhar(request, id):
+@user_passes_test(is_pharmacist)
+@login_required
+def updPhar(request):
     if request.method == "PUT":
-        pharmacie = get_object_or_404(Pharmacie, pk=id)
-        nom      = request.POST.get('nom', '')
+        pharmacien = get_object_or_404(Pharmacien, pk=request.user.id)
+        pharmacie = pharmacien.pharmacie
+        nom = request.POST.get('nom', '')
         location = request.POST.get('location', '')
         description = request.POST.get('description', '')
 
-        if pharmacie.pharmacien == request.user:
+        if pharmacie == pharmacien.pharmacie:
             pharmacie.nom, pharmacie.location, pharmacie.description = nom, location, description
             pharmacie.save()
             return redirect('dashboard_ph')
     context = {
         'title' : 'Mise a jour de Pharmacie',
-        'pharmacie' : pharmacie,
+        'ph' : pharmacie,
     }
     return render(request, 'pharmacien/update.html', context)
 
-# @login_required
+@user_passes_test(is_pharmacist)
+@login_required
 def delPhar(request, id):
     if request.method == "POST":
         ph = get_object_or_404(Pharmacie, pk=id)
@@ -78,7 +105,7 @@ def delPhar(request, id):
         ph.delete()
 
 # MALADIE
-# @login_required
+@login_required
 def creaIll(request):
     if request.method == "POST":
         nom = request.POST.get('nom', '')
@@ -112,7 +139,7 @@ def readAllIll(request):
     }
     return render(request, 'pharmacien/readAllMal.html', context)
 
-# @login_required
+@login_required
 def updIll(request, id):
     if request.method == "PUT":
         maladie = get_object_or_404(Maladie, pk=id)
@@ -134,7 +161,7 @@ def updIll(request, id):
     }
     return render(request, 'pharmacien/updateIll.html', context)
 
-# @login_required
+@login_required
 def delIll(request, id):
     if request.method == "POST":
         m = get_object_or_404(Maladie, pk=id)
@@ -142,7 +169,8 @@ def delIll(request, id):
         m.delete()
 
 # MEDICATION
-# @login_required
+@user_passes_test(is_pharmacist)
+@login_required
 def creaMedoc(request):
     if request.method == "POST":
         nom  = request.POST.get('nom', '')
@@ -151,7 +179,10 @@ def creaMedoc(request):
         avantages = request.POST.get('avantages', '')
         inconvenients = request.POST.get('inconvenients', '')
         
-        Medication.objects.create(nom=nom, avantages=avantages, prix=prix, inconvenients=inconvenients, image=image).save()
+        m = Medication.objects.create(nom=nom, avantages=avantages, prix=prix, inconvenients=inconvenients, image=image).save()
+        if request.user.is_authenticated:
+            ph = get_object_or_404(Pharmacien, pk=request.user.id)
+            ph.pharmacie.medications.add(m)
         return redirect('dashboard_ph')
     context = {
         'title': 'Ajout de Medicament',
@@ -170,11 +201,12 @@ def readAllMedoc(request):
     medication = Medication.objects.all()
     context = {
         'title' : 'informations de Medication',
-        'medication' : medication,
+        'medications' : medication,
     }
     return render(request, 'pharmacien/readAllMedoc.html', context)
 
-# @login_required
+@user_passes_test(is_pharmacist)
+@login_required
 def updMedoc(request, id):
     if request.method == "PUT":
         medication = get_object_or_404(Medication, pk=id)
@@ -194,7 +226,8 @@ def updMedoc(request, id):
     }
     return render(request, 'pharmacien/updateMedoc.html', context)
 
-# @login_required
+@user_passes_test(is_pharmacist)
+@login_required
 def delMedoc(request, id):
     if request.method == "POST":
         m =get_object_or_404(Medication, pk=id)

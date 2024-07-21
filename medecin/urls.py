@@ -3,8 +3,9 @@ from .views import *
 
 urlpatterns = [
     path('dashboard/', dashboard, name='dashboard_m'),
-    path('appointement/accepte-#<int:id>/', accepte, name='accepte'),
     path('appointement/refuse-<int:id>#/', refuse, name='refuse'),
+    path('appointement/accepte-<int:id>/programmation-#/', prevu, name='prevu'),
+    path('appointement/mis-a-jour-<int:id>/programmation-#/', uPrevu, name='uPrevu'),
     path('hospital/create/', creaHopital, name='create_hos'),
     path('hospital/read/hos-<int:id>-view/', readHopital, name='read_hos'),
     path('hospital/read/all/', readAllHopital, name='readAll_hos'),
