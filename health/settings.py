@@ -21,22 +21,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# Celery settings
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # or the broker of your choice
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # or the backend of your choice
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-# CELERY_TIMEZONE = 'Europe/Paris'
-
-CELERY_BEAT_SCHEDULE = {
-    'send_appointment_reminders': {
-        'task': 'reminders.tasks.send_appointment_reminders',
-        'schedule': timedelta(minutes=30),
-    },
-}
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
