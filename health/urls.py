@@ -25,7 +25,6 @@ urlpatterns = [
     path('health/calendar/', calendar, name='calendar'),
     path('health/coming-soon/', coming_soon, name='coming_soon'),
     path('accounts/', include('authentification.urls')),
-    path('chat/', include('chat.urls')),
     path('medecin/', include('medecin.urls')),
     path('patient/', include('patient.urls')),
     path('pharmacie/', include('pharmacie.urls')),
