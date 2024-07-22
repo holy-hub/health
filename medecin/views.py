@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+from pharmacie.views import is_patient
 from .models import *
 
 # create your views here.
@@ -336,3 +338,22 @@ def delSpeciality(request, spc_name):
     Archive.objects.create(content_object=s, archived_by=request.user)
     s.delete()
     return redirect('dashboard_m')
+
+@user_passes_test(is_patient)
+@login_required
+def creaSante(request):
+    if request.method == 'POST':
+        patient = Patient.objects.get(pk=request.user.id)
+        if (patient):
+            CarnetSante.objects.create(patient=patient).save()
+    return redirect('redirection')
+
+@user_passes_test(is_patient)
+@login_required
+def readSante(request):
+    carnet = get_object_or_404(CarnetSante, patient=request.user)
+    context = {
+        'title': 'Mon carnet de sante',
+        'carnet': carnet,
+    }
+    return render(request, 'readSante.html', context)

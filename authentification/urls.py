@@ -12,5 +12,5 @@ urlpatterns = [
     path('lock/screen/', veille, name='veille '),
     path('check/activity/', check_user_activity, name='check_user_activity'),
     path('delete-account/', deleteAccount, name='deleteAccount'),
-    path('redirection/dashboard/', redirection, name='redirection'),
+    path('redirection/', redirection, name='redirection'),
 ]

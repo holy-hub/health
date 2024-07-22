@@ -33,7 +33,8 @@ def dashboard(request):
 
     context = {
         'title': 'Pharmacien ' + pharmacien.username,
-        'pharmaie': pharmacien.pharmacie,
+        'pharmacie': pharmacien.pharmacie,
+        'date': pharmacien.date_joined.strftime('%b %Y'),
         'nb_medocs': len(medications),
         'maladies': three_maladies,
     }
@@ -51,14 +52,26 @@ def creaPhar(request):
         if ph.pharmacie:
             pass
         else:
-            pcie = Pharmacie.objects.create(nom=nom, location=location, description=description, pharmacien=request.user).save()
-            if request.user.is_authenticated:
-                ph.pharmacie = pcie
+            pcie = Pharmacie.objects.create(nom=nom, location=location, description=description)
+            pcie.save()
+            ph.pharmacie = pcie
+            ph.save()
         return redirect('dashboard_ph')
     context = {
         'title': 'Ajout de Pharmacie',
     }
     return render(request, 'pharmacien/create.html', context)
+
+@user_passes_test(is_pharmacist)
+@login_required
+def readMyPhar(request):
+    pharmacien = get_object_or_404(Pharmacien, pk=request.user.id)
+    pharmacie = pharmacien.pharmacie
+    context = {
+        'title'     : 'informations de Pharmacie',
+        'pharmacie' : pharmacie,
+    }
+    return render(request, 'pharmacien/read.html', context)
 
 def readPhar(request, id):
     pharmacie = get_object_or_404(Pharmacie, pk=id)
@@ -98,13 +111,16 @@ def updPhar(request):
 
 @user_passes_test(is_pharmacist)
 @login_required
-def delPhar(request, id):
+def delPhar(request):
     if request.method == "POST":
-        ph = get_object_or_404(Pharmacie, pk=id)
-        Archive.objects.create(content_object=ph, archive_by=request.user)
-        ph.delete()
+        ph = get_object_or_404(Pharmacien, pk=request.user.id)
+        pcie = ph.pharmacie
+        Archive.objects.create(content_object=pcie, archive_by=ph)
+        pcie.delete()
+        return redirect('dashboard_ph')
 
 # MALADIE
+@user_passes_test(is_pharmacist)
 @login_required
 def creaIll(request):
     if request.method == "POST":
@@ -139,6 +155,7 @@ def readAllIll(request):
     }
     return render(request, 'pharmacien/readAllMal.html', context)
 
+@user_passes_test(is_pharmacist)
 @login_required
 def updIll(request, id):
     if request.method == "PUT":
@@ -182,7 +199,7 @@ def creaMedoc(request):
         m = Medication.objects.create(nom=nom, avantages=avantages, prix=prix, inconvenients=inconvenients, image=image).save()
         if request.user.is_authenticated:
             ph = get_object_or_404(Pharmacien, pk=request.user.id)
-            ph.pharmacie.medications.add(m)
+            # ph.pharmacie.medications.add(m)
         return redirect('dashboard_ph')
     context = {
         'title': 'Ajout de Medicament',

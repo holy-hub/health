@@ -17,31 +17,31 @@
     <div class="row">
         <!-- left column -->
         <div class="col-md-3"></div>
-        <!-- center column -->
         <div class="col-md-6">
             <!-- general form elements -->
             <div class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title">Ajout d'une Pharmacie</h3>
+                    <h3 class="box-title">Modifier ma Pharmacie</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                     <!-- form start -->
-                    <form role="form" action="{% url "update_ph"  %}" method="post">
+                    <form role="form" action="{% url "update" %}" method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="exampleInputEmail1">Nom de la pharmacie</label>
                             <input type="text" class="form-control" id="exampleInputEmail1"
-                                name="nom" value="{{ ph.nom }}" disabled>
+                                name="nom" value="{{ ph.nom }}">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Description</label>
-                            <textearea class="form-control" id="exampleInputPassword1" name="description" value="{{ ph.description }}">
+                            <label>Description</label>
+                            <textarea class="form-control" rows="2" placeholder="Enter ..." name="description" value="{{ ph.description }}"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="demo">Localisation</label>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger" onclick="getLocation()">Trouvez ma position</button>
+                            </div><!-- /btn-group -->
                             <input type="text" class="form-control" name="location" value="{{ ph.location }}" id="demo" placeholder="Ici">
-                            <button type="button" class="btn btn-light" onclick="getLocation()">Trouvez ma position</button>
-                        </div>
+                        </div><!-- /input-group -->
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>

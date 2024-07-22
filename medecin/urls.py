@@ -31,4 +31,6 @@ urlpatterns = [
     path('speciality/read/all/', readAllSpeciality, name='readAll_spc'),
     path('speciality/update/spc-<int:id>-view/', updSpeciality, name='update_spc'),
     path('speciality/delete/spc-<int:id>-view/', delSpeciality, name='delete_spc'),
+    path('carnet-sante/create/', creaSante, name='create_Sante'),
+    path('carnet-sante/read/', readSante, name='my_Sante'),
 ]

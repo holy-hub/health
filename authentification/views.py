@@ -9,31 +9,21 @@ from .models import *
 
 # Create your views here.
 def dash(request):
-    if request.user.is_authenticated:
-        user = request.user
-        if hasattr(user, 'medecin'):
-            return redirect('dashboard_m')
-        elif hasattr(user, 'pharmacien'):
-            return redirect('dashboard_ph')
+    user = get_object_or_404(Utilisateur, pk=request.user.id)
+    if user.is_medecin:
+        return redirect('dashboard_m')
+    elif user.is_pharmacien:
+        return redirect('dashboard_ph')
+    elif user.is_patient:
         return redirect('dashboard_p')
-    return redirect('home')
+    else:
+        return redirect('home')
 
 def redirection(request):
-    user = None
     if request.user.is_authenticated:
-        try:
-            user = get_object_or_404(Patient, request.user.username)
-        except Patient.DoesNotExist:
-            try:
-                user = get_object_or_404(Medecin, request.user.username)
-            except Medecin.DoesNotExist:
-                try:
-                    user = get_object_or_404(Pharmacien, request.user.username)
-                except Pharmacien.DoesNotExist:
-                    pass
-        if user is not None:
-            dash(request)
-    return redirect('home')
+        return dash(request)
+    else:
+        return redirect('home')
 
 def log_in(request):
     if request.method == 'POST':

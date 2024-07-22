@@ -53,7 +53,7 @@ class Pharmacie(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.pharmacien.username} proprietaire de la pharmacie {self.nom}"
+        return f"{self.nom}"
 
     def get_medication(self):
         return [str(medication) for medication in self.medications]

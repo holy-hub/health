@@ -234,19 +234,20 @@
                             <img src="{% static 'adminLTE/img/avatar3.png' %}" class="img-circle" alt="User Image" />
                             <p>
                                 {{ request.username }} - {{ request.user.profession }}
-                                <small>Member since { request.user.date_joined.strftime('%b %Y') }</small>
+                                <small>Member since {{ date }}</small>
                             </p>
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Prendre rendez-vous</a>
+                            <div class="col-xs-6 text-center">
+                                {% if pharmacie %}
+                                <a href="{% url "readMy_ph" %}">Ma Pharmacie</a>
+                                {% else %}
+                                <a href="{% url "create_ph" %}">Ma Pharmacie</a>
+                                {% endif %}
                             </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Mon carnet</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Historique</a>
+                            <div class="col-xs-6 text-center">
+                                <a href="{% url "coming_soon" %}">Historique</a>
                             </div>
                         </li>
                         <!-- Menu Footer-->
@@ -314,7 +315,11 @@
                         <li><a href="{% url "readAll_medoc" %}"><i class="fa fa-angle-double-right"></i> Mes medicaments</a></li>
                         <li><a href="{% url "create_medoc" %}"><i class="fa fa-angle-double-right"></i> Ajouter un medicament</a>
                         </li>
-                        <li><a href="{% url "coming_soon" %}"><i class="fa fa-angle-double-right"></i> Ma pharmacie</a></li>
+                        {% if pharmacie %}
+                        <li><a href="{% url "readMy_ph" %}"><i class="fa fa-angle-double-right"></i> Ma pharmacie</a></li>
+                        {% else %}
+                        <li><a href="{% url "create_ph" %}"><i class="fa fa-angle-double-right"></i> Ma pharmacie</a></li>
+                        {% endif %}
                     </ul>
                 </li>
                 <li>

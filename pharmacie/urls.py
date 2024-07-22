@@ -4,10 +4,11 @@ from .views import *
 urlpatterns = [
     path('dashboard/', dashboard, name='dashboard_ph'),
     path('pharmacie/new/', creaPhar, name='create_ph'),
+    path('pharmacie/read/phar/-/vwRd/', readMyPhar, name='readMy_ph'),
     path('pharmacie/read/phar<int:id>vwRd/', readPhar, name='readOne_ph'),
     path('pharmacie/read/all/', readAllPhar, name='readAll_ph'),
     path('pharmacie/update/phar-mien-vwUpD/', updPhar, name='update_ph'),
-    path('pharmacie/delete/phar<int:id>vwDlp/', delPhar, name='delete_ph'),
+    path('pharmacie/delete/phar-/-vwDlp/', delPhar, name='delete_ph'),
     path('maladie/new/', creaIll, name='create_ill'),
     path('maladie/read/ill<int:id>vwRd/', readIll, name='readOne_ill'),
     path('maladie/read/ill/all/', readAllIll, name='readAll_ill'),

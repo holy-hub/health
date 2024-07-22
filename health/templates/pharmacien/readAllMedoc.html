@@ -3,21 +3,22 @@
 {% block content %}
 <section>
     <div class="container">
+        <div class="row mb-3">
+            <center><a href="{% url "redirection" %}" class="nav-link">Home | dashboard</a></center>
+        </div>
         <div class="row">
-            <div class="col">
-                {% for med in medications %}
-                <div class="col-2 p-2 bg-light rounded">
-                    <h3><center>{{ med.nom }}</center></h3>
-                    {% if med.image %}
-                    <p><img src="{{ med.image.url }}" alt="{{ med.image.name }}" class="img-thumbnail rounded"></p>
-                    {% else %} <div class="">Aucune image</div>
-                    {% endif %}
-                    <small class="float-right">{{ med.prix }}</small>
-                </div>
-                {% empty %} <center>Aucune donnees enregistrées</center>
-                <button class="btn btn-info d-block m-auto mt-4"><a href="{% url "create_medoc" %}" class="nav-link"><i class="fa fa-plus-square"> Ajouter</i></a></button>
-                {% endfor %}
+            {% for med in medications %}
+            <div class="col-2 m-2 p-2 bg-light rounded">
+                <h3><center>{{ med.nom }}</center></h3>
+                {% if med.image %}
+                <p><img src="{{ med.image.url }}" alt="{{ med.image.name }}" class="img-thumbnail rounded"></p>
+                {% else %} <div class="">Aucune image</div>
+                {% endif %}
+                <small class="">prix: {{ med.prix }} F CFA</small>
             </div>
+            {% empty %} <center>Aucune donnees enregistrées</center>
+            <button class="btn btn-info d-block m-auto mt-4"><a href="{% url "create_medoc" %}" class="nav-link"><i class="fa fa-plus-square"> Ajouter</i></a></button>
+            {% endfor %}
         </div>
     </div>
 </section>

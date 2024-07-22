@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from authentification.models import Utilisateur
 from medecin.models import Advice, CarnetSante, Facture, Prescription
 from pharmacie.models import Maladie
 from django.contrib import messages
@@ -10,6 +11,7 @@ from .models import *
 @login_required
 def dashboard(request):
     patient = get_object_or_404(Patient, pk=request.user.id)
+    carnet = CarnetSante.objects.filter(patient=patient).first()
     rdv = Appointement.objects.filter(patient=patient, status="EN ATTENTE").all()
     rdv_a = Appointement.objects.filter(patient=patient, status="ACCEPTÉ").all()
     rdv_r = Appointement.objects.filter(patient=patient, status="REFUSÉ").all()
@@ -18,6 +20,7 @@ def dashboard(request):
     context = {
         'title': 'Patient ' + patient.username,
         'date': patient.date_joined.strftime('%b %Y'),
+        'c': carnet,
         'nb_rdv': nb_rdv,
         'nb_rdv_a': nb_rdv_a,
         'nb_rdv_r': nb_rdv_r,
@@ -106,12 +109,15 @@ def all_medecin(request):
 
 @login_required
 def monCarnet(request):
-    carnet = CarnetSante.objects.get(patient=request.user)
-    first_data = carnet.hospitalisations[:14]
-    last_data = carnet.hospitalisations[14:]
+    carnet = get_object_or_404(CarnetSante, patient=request.user)
+    p = get_object_or_404(Utilisateur, pk=request.user.id)
+    if carnet.hospitalisations:
+        first_data = carnet.hospitalisations.all()[:14]
+        last_data = carnet.hospitalisations.all()[14:]
+    else: first_data = last_data = []
     context = {
         'title': 'Mon Carnet de Sante',
-        'date': request.user.date_joined.strftime('%b %Y'),
+        'date': p.date_joined.strftime('%b %Y'),
         'monCarnet': carnet,
         'first_data': first_data,
         'last_data': last_data,
