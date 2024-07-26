@@ -11,7 +11,7 @@ from .models import *
 @login_required
 def dashboard(request):
     patient = get_object_or_404(Patient, pk=request.user.id)
-    carnet = CarnetSante.objects.filter(patient=patient).first()
+    carnet = CarnetSante.objects.filter(patient=patient).last()
     rdv = Appointement.objects.filter(patient=patient, status="EN ATTENTE").all()
     rdv_a = Appointement.objects.filter(patient=patient, status="ACCEPTÉ").all()
     rdv_r = Appointement.objects.filter(patient=patient, status="REFUSÉ").all()
@@ -99,9 +99,11 @@ def prescription_name(request, id):
     return render(request, 'patient/myOne_prescription.html', context)
 
 def all_medecin(request):
+    user = Utilisateur.objects.get(pk=request.user.id)
     medecins = Medecin.objects.all()
     context = {
         'title': 'Tous les medecins',
+        'base': 'patient_base.html' if user.is_patient else 'medecin_base.html' if user.is_medecin else 'pharmacien_base.html',
         'date': request.user.date_joined.strftime('%b %Y'),
         'medecins': medecins,
     }
@@ -109,11 +111,10 @@ def all_medecin(request):
 
 @login_required
 def monCarnet(request):
-    carnet = get_object_or_404(CarnetSante, patient=request.user)
-    p = get_object_or_404(Utilisateur, pk=request.user.id)
+    p = Patient.objects.get(pk=request.user.id)
+    carnet = CarnetSante.objects.filter(patient=p).last()
     if carnet.hospitalisations:
-        first_data = carnet.hospitalisations.all()[:14]
-        last_data = carnet.hospitalisations.all()[14:]
+        first_data, last_data = carnet.hospitalisations.all()[:14], carnet.hospitalisations.all()[14:]
     else: first_data = last_data = []
     context = {
         'title': 'Mon Carnet de Sante',

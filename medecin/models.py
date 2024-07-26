@@ -114,9 +114,9 @@ class Chirurgie(Traitement):
     anesthesiste = models.CharField(max_length=50)
 
 class Consultation(models.Model):
-    medecin = models.ForeignKey(Medecin, related_name='consultations_medecin', on_delete=models.CASCADE)
-    patient = models.ForeignKey(Patient, related_name='consultations_patient', on_delete=models.CASCADE)
-    date_consultation = models.DateTimeField()
+    medecin = models.ForeignKey(Medecin, related_name='consultation_medecin', on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, related_name='consultation_patient', on_delete=models.CASCADE)
+    date_consultation = models.DateTimeField(auto_now_add=True)
     motif = models.TextField()
     diagnostic = models.TextField()
     poids = models.FloatField( default=0,)
@@ -128,7 +128,6 @@ class Consultation(models.Model):
     tension_arterielle = models.CharField(max_length=20, default=0)
     frequence_cardiaque = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
-    date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
 
     def __str__(self):

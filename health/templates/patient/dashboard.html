@@ -9,6 +9,16 @@
   </h1>
   <ol class="breadcrumb">
     <li>
+      {% if c %}
+      <a href="{% url "monCarnet" %}" class="btn btn-info nav-link m-4"><i class="fa fa-angle-double-right"></i> Mon carnet de sante</a>
+      {% else %}
+      <form action="{% url "create_Sante" %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary"><i class="fa fa-angle-double-right"></i> Generer mon carnet de sante</button>
+      </form>
+      {% endif %}
+    </li>
+    <li>
       <a href="% url "home" %}"><i class="fa fa-dashboard"></i> Home</a>
     </li>
     <li class="active">Dashboard</li>
@@ -38,7 +48,7 @@
       <!-- small box -->
       <div class="small-box bg-green">
         <div class="inner">
-          <h3>{{ nb_rdv_a }}<sup style="font-size: 20px">%</sup></h3>
+          <h3>{{ nb_rdv_a }}<!-- <sup style="font-size: 20px">%</sup> --></h3>
           <p>Rendez-vous Acceptés</p>
         </div>
         <div class="icon">

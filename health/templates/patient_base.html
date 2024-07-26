@@ -246,20 +246,10 @@
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
-                            <div class="col-xs-4 text-center">
+                            <div class="col-xs-6 text-center">
                                 <a href="{% url "all_medecin" %}">Prendre rendez-vous</a>
                             </div>
-                            <div class="col-xs-4 text-center">
-                                {% if c %}
-                                <a href="{% url "monCarnet" %}">Mon carnet</a>
-                                {% else %}
-                                <form action="{% url "create_Sante" %}" method="POST">
-                                    {% csrf_token %}
-                                    <button class="btn btn-light">Generer mon carnet</button>
-                                </form>
-                                {% endif %}
-                            </div>
-                            <div class="col-xs-4 text-center">
+                            <div class="col-xs-6 text-center">
                                 <a href="{% url "coming_soon" %}">Historique</a>
                             </div>
                         </li>
@@ -325,16 +315,7 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        {% if c %}
-                        <li><a href="{% url "monCarnet" %}"><i class="fa fa-angle-double-right"></i>Mon carnet de sante</a></li>
-                        {% else %}
-                        <form action="{% url "create_Sante" %}" method="post">
-                            {% csrf_token %}
-                            <li><i class="fa fa-angle-double-right"></i> <button type="submit" class="btn btn-primary"> Generer mon carnet de sante</button></li>
-                        </form>
-                        {% endif %}
-                        <li><a href="{% url "factures" %}"><i class="fa fa-angle-double-right"></i> Mes factures</a>
-                        </li>
+                        <li><a href="{% url "factures" %}"><i class="fa fa-angle-double-right"></i> Mes factures</a></li>
                         <li><a href="{% url "prescription" %}"><i class="fa fa-angle-double-right"></i> Mes Ordonnances</a></li>
                     </ul>
                 </li>

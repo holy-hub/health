@@ -26,8 +26,7 @@ def dashboard(request):
         pharmacien = get_object_or_404(Pharmacien, pk=request.user.id)
         medications = pharmacien.pharmacie.medications.all() if pharmacien.pharmacie else []
     except Pharmacien.DoesNotExist:
-        # Handle the case where the Pharmacien object does not exist
-        medications = []
+        medications = [] # Handle the case where the Pharmacien object does not exist
     maladies = list(Maladie.objects.all())
     three_maladies = random.sample(maladies, 3) if len(maladies) > 3 else maladies
 

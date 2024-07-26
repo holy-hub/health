@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-from pharmacie.views import is_patient
+from pharmacie.views import is_patient, is_doctor
 from .models import *
 
 # create your views here.
@@ -14,7 +14,9 @@ def dashboard(request):
     context = {
         'title': 'Medecin ' + medecin.username,
         'rdvs': rdvs,
-        'rdva': rdva,
+        'rdva': rdva, 'm': medecin,
+        's': len(rdvs),
+        'a': len(rdva),
         'date': medecin.date_joined.strftime('%b %Y'),
     }
     return render(request, 'medecin/dashboard.html', context)
@@ -22,7 +24,8 @@ def dashboard(request):
 @login_required
 def refuse(request, id):
     rdv = get_object_or_404(Appointement, pk=id)
-    rdv.response(1)
+    rdv.status = rdv.STATUS_CHOICE[1][1]  # Set status to "accepté"
+    rdv.save()
     return redirect('dashboard_m')
 
 @login_required
@@ -51,12 +54,15 @@ def uPrevu(request, id):
 """
 @login_required
 def creaHopital(request):
+    m = get_object_or_404(Medecin, pk=request.usrer.id)
     if request.method == 'POST':
         nom = request.POST.get('nom', '')
         adresse = request.POST.get('adresse', '')
         localisation = request.POST.get('localisation', '')
-
-        Hopital.objects.create(nom=nom, adresse=adresse, localisation=localisation).save()
+    
+        h = Hopital.objects.create(nom=nom, adresse=adresse, localisation=localisation)
+        h.medecins.add(m)
+        h.save()
         return redirect('dashboard_m')
     context = {
         'title': 'Ajouter Hopital',
@@ -339,6 +345,9 @@ def delSpeciality(request, spc_name):
     s.delete()
     return redirect('dashboard_m')
 
+"""
+    Carnet de Sante CRUD
+"""
 @user_passes_test(is_patient)
 @login_required
 def creaSante(request):
@@ -351,9 +360,78 @@ def creaSante(request):
 @user_passes_test(is_patient)
 @login_required
 def readSante(request):
-    carnet = get_object_or_404(CarnetSante, patient=request.user)
+    patient = Patient.objects.get(pk=request.user.id)
+    carnet = get_object_or_404(CarnetSante, patient=patient)
     context = {
         'title': 'Mon carnet de sante',
         'carnet': carnet,
     }
     return render(request, 'readSante.html', context)
+
+"""
+    Consultation CRUD
+"""
+@user_passes_test(is_doctor)
+@login_required
+def creaConsultation(request):
+    if request.method == 'POST':
+        motif = request.POST.get('motif', '')
+        dignostic = request.POST.get('dignostic', '')
+        poids = float(request.POST.get('poids', ''))
+        taille = float(request.POST.get('taille', ''))
+        typeConsult = request.POST.get('typeConsult', '')
+        price = float(request.POST.get('price', ''))
+        temperature = float(request.POST.get('temperature', ''))
+        tension_arterielle = request.POST.get('tension_arterielle', '')
+        frequence_cardiaque = request.POST.get('frequence_cardiaque', '')
+        notes = request.POST.get('notes', '')
+
+        Consultation.objects.create(
+            motif=motif,
+            dignostic=dignostic,
+            poids=poids,
+            taille=taille,
+            typeConsult=typeConsult,
+            price=price,
+            temperature=temperature,
+            tension_arterielle=tension_arterielle,
+            frequence_cardiaque=frequence_cardiaque,
+            notes=notes
+        ).save()
+    context = {
+        'title': 'cree une consultation',
+    }
+    return render(request, '', context)
+
+@user_passes_test(is_doctor)
+@login_required
+def creaConsultation(request):
+    if request.method == 'POST':
+        motif = request.POST.get('motif', '')
+        dignostic = request.POST.get('dignostic', '')
+        poids = float(request.POST.get('poids', ''))
+        taille = float(request.POST.get('taille', ''))
+        typeConsult = request.POST.get('typeConsult', '')
+        price = float(request.POST.get('price', ''))
+        temperature = float(request.POST.get('temperature', ''))
+        tension_arterielle = request.POST.get('tension_arterielle', '')
+        frequence_cardiaque = request.POST.get('frequence_cardiaque', '')
+        notes = request.POST.get('notes', '')
+
+        Consultation.objects.create(
+            motif=motif,
+            dignostic=dignostic,
+            poids=poids,
+            taille=taille,
+            typeConsult=typeConsult,
+            price=price,
+            temperature=temperature,
+            tension_arterielle=tension_arterielle,
+            frequence_cardiaque=frequence_cardiaque,
+            notes=notes
+        ).save()
+        return redirect('')
+    context = {
+        'title': 'cree une consultation',
+    }
+    return render(request, '', context)
