@@ -163,6 +163,7 @@
                             <th>Motif</th>
                             <th>Date</th>
                             <th>Modifier</th>
+                            <th>Consultation</th>
                         </tr>
                         {% for rdv in rdva %}
                         <tr>
@@ -170,9 +171,8 @@
                             <td>{{ rdv.patient.username }}</td>
                             <td>{{ rdv.motif }}</td>
                             <td>{{ rdv.date_rdv|date }}</td>
-                            <td><span class="badge bg-green"><button class="btn btn-info" data-bs-toggle="modal"
-                                        data-bs-target="#myModal{{forloop.counter}}"><i
-                                            class="fa fa-edit">Modifier</i></button></span></td>
+                            <td><span class="badge bg-yellow"><button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal{{forloop.counter}}"><i class="fa fa-edit">Modifier</i></button></span></td>
+                            <td><span class="badge bg-green"><button class="btn btn-success" onclick="window.location.href='{% url "creaConsultation" rdv.patient.id 'hospitalisation' %}'"><i class="fa fa-eye"></i></button></span></td>
                         </tr>
                         <!-- The Modal -->
                         <div class="modal" id="myModal{{forloop.counter}}">
@@ -211,6 +211,7 @@
                             <td>Mot de tete</td>
                             <td>Demain</td>
                             <td><i class="fa fa-edit d-block m-auto"></i></td>
+                            <td><i class="fa fa-eye d-block m-auto"></i></td>
                         </tr>
                         {% endfor %}
                     </table>

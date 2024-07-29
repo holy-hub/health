@@ -18,6 +18,10 @@ def is_pharmacist(user):
     user = Utilisateur.objects.get(id=user.id)
     return user.is_pharmacien
 
+def is_health(user):
+    user = Utilisateur.objects.get(id=user.id)
+    return user.is_pharmacien or user.is_medecin
+
 # PHARMACIE
 @user_passes_test(is_pharmacist)
 @login_required
@@ -119,9 +123,13 @@ def delPhar(request):
         return redirect('dashboard_ph')
 
 # MALADIE
-@user_passes_test(is_pharmacist)
+@user_passes_test(is_health)
 @login_required
 def creaIll(request):
+    user = get_object_or_404(Utilisateur, pk=request.user.id)
+    if user is not None:
+        base = 'medecin _base.html' if user.is_medecin else 'pharmacien_base.html' if user.is_pharmacien else 'patient_base.html'
+    else: base = 'base.html'
     if request.method == "POST":
         nom = request.POST.get('nom', '')
         nom_scientiste = request.POST.get('nom_scientiste', '')
@@ -135,6 +143,7 @@ def creaIll(request):
         return redirect('dashboard_ph')
     context = {
         'title': 'Ajout de Maladie',
+        'base': base,
     }
     return render(request, 'pharmacien/creaMal.html', context)
 

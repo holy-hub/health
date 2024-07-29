@@ -15,7 +15,7 @@ class Appointement(models.Model):
     patient = models.ForeignKey(Patient, related_name='appointements_patient', verbose_name="Patient", on_delete=models.CASCADE)
     medecin = models.ForeignKey(Medecin, related_name='appointements_medecin', verbose_name="Medecin", on_delete=models.CASCADE)
     date_rdv = models.DateTimeField(blank=True, null=True)
-    motif = models.CharField(max_length=250, default="")
+    motif = models.CharField(max_length=250, default="Mal a l'aise")
     create_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICE, default=STATUS_CHOICE[3][1])
     reminder_sent = models.BooleanField(default=False)

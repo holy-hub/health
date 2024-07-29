@@ -1,0 +1,78 @@
+{% extends "medecin_base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="content-header">
+    <h1>
+        Consultation
+        <small>Previsualisation</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Nouvelle Consultation</li>
+    </ol>
+</section>
+
+<section class="content-header">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-3"></div>
+        <!-- center  column -->
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <form role="form" method="POST" action="{% url "creaConsultation" id title %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="motif">Motif</label>
+                                <input type="text" class="form-control" id="motif" name="motif" placeholder="Motif de la consultation">
+                            </div>
+                            <div class="form-group">
+                                <label for="poids">Poids</label>
+                                <input type="number" class="form-control" id="poids" name="poids" placeholder="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="taille">Taille</label>
+                                <input type="number" class="form-control" id="taille" name="taille" placeholder="1.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="prix">Prix</label>
+                                <input type="number" class="form-control" id="prix" name="prix" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="temperature">Temperature</label>
+                                <input type="number" class="form-control" id="temperature" name="temperature" placeholder="37.7">
+                            </div>
+                            <div class="form-group">
+                                <label for="tension_arterielle">Tension arterielle</label>
+                                <input type="number" class="form-control" id="tension_arterielle" name="tension_arterielle" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="tension_arterielle">Tension Arterielle</label>
+                                <input type="number" class="form-control" id="tension_arterielle" name="tension_arterielle" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="frequence_cardiaque">Frequence Cardiaque</label>
+                                <input type="number" class="form-control" id="frequence_cardiaque" name="frequence_cardiaque" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Diagnostic</label>
+                                <textarea class="form-control" name="diagnostic" rows="3" placeholder="diagnostic sur le patient"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Constats</label>
+                                <textarea class="form-control" name="notes" rows="3" placeholder="description"></textarea>
+                            </div>
+                        </div><!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Faire la prescription</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

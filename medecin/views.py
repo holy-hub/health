@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -77,6 +78,15 @@ def readHopital(request, id):
     }
     return render(request, 'medecin/updateHospital.html', context)
 
+def myHopital(request):
+    m = get_object_or_404(Medecin, pk=request.user.id)
+    hospital = Hopital.objects.get(hopitaux=m).first()
+    context = {
+        'title': 'Afficher Hopital',
+        'hopital': hospital,
+    }
+    return render(request, 'medecin/updateHospital.html', context)
+
 def readAllHopital(request):
     hospitals = Hopital.objects.all()
     context = {
@@ -114,61 +124,78 @@ def delHopital(request, id):
 """
     Advice CRUD
 """
+@user_passes_test(is_doctor)
 @login_required
 def creaAdvice(request):
+    user = get_object_or_404(Medecin, pk=request.user.id)
+    ills = Maladie.objects.all()
     if request.method == 'POST':
         title = request.POST.get('title', '')
         content = request.POST.get('content', '')
         ill = request.POST.get('ill', '')
-        image = request.POST.get('image', '')
+        image = request.FILES.get('image', '')
 
-        Advice.objects.create(title=title, content=content, ill=ill, medecin=request.user, image=image).save()
-        return redirect('dashboard_m')
+        Advice.objects.create(title=title, content=content, ill=ill, image=image, medecin=user).save()
+        return redirect('readMy_adv')
     context = {
-        'title': 'Ajouter Advice',
+        'title': 'Ajouter Conseil',
+        'illness': ills,
     }
     return render(request, 'medecin/createAdvice.html', context)
 
-def readAdvice(request, adv_name):
-    advice = Advice.objects.get(pk=adv_name)
+def readAdvice(request, id):
+    advice = Advice.objects.get(pk=id)
     context = {
-        'title': 'Ajouter Advice',
+        'title': 'Ajouter Conseil',
         'advice': advice,
     }
     return render(request, 'medecin/readAdvice.html', context)
 
 def readAllAdvice(request):
     advice = Advice.objects.all()
+    base = "base.html"
     context = {
-        'title': 'Afficher Advices',
-        'advice': advice,
+        'title': 'Afficher Conseils',
+        'advices': advice,
+        'base': base,
     }
     return render(request, 'medecin/readAllAdvice.html', context)
 
+@user_passes_test(is_doctor)
 @login_required
-def updAdvice(request, adv_name):
-    advice = Advice.objects.get(pk=adv_name)
+def readMyAdvice(request):
+    user = get_object_or_404(Medecin, pk=request.user.id)
+    advice = Advice.objects.filter(medecin=user).all()
+    context = {
+        'title': 'Afficher Conseils',
+        'advice': advice,
+    }
+    return render(request, 'medecin/readMyAdvice.html', context)
+
+@user_passes_test(is_doctor)
+@login_required
+def updAdvice(request, id):
+    advice = Advice.objects.get(pk=id)
+    ills = Maladie.objects.all()
     if request.method == 'PUT':
         title = request.POST.get('title', '')
         content = request.POST.get('content', '')
         ill = request.POST.get('ill', '')
-        image = request.POST.get('image', '')
+        image = request.FILES.get('image', '')
 
-        advice.title = title
-        advice.content = content
-        advice.ill = ill
-        advice.image = image
+        advice.title, advice.content, advice.ill, advice.image = title, content, ill, image
         advice.save()
-        return redirect('dashboard_m')
+        return redirect('readMy_adv')
     context = {
-        'title': 'Ajouter Advice',
+        'title': 'Modifier Conseil',
         'advice': advice,
+        'illness': ills,
     }
     return render(request, 'medecin/updateAdvice.html', context)
 
 @login_required
-def delAdvice(request, adv_name):
-    a = Advice.objects.get(pk=adv_name)
+def delAdvice(request, id):
+    a = Advice.objects.get(pk=id)
     Archive.objects.create(content_object=a, archived_by=request.user)
     a.delete()
     return redirect('dashboard_m')
@@ -233,22 +260,30 @@ def delConsigne(request, csg_name):
     Prescription CRUD
 """
 @login_required
-def creaPrescription(request):
+def creaPrescription(request, p_id, c_id):
+    med = Medication.objects.all()
     if request.method == 'POST':
-        temperature = request.POST.get('temperature', '')
-        observation = request.POST.get('observation', '')
-        consigne = request.POST.get('consigne', '')
-        patient = request.POST.get('patient', '')
+        title = request.POST.get('title', '')
+        consigne = request.POST.get('consigne', None)
+        med = request.POST.get('medication', None)
+        patient = get_object_or_404(Patient, pk=p_id)
+        m = get_object_or_404(Medecin, pk=request.user.id)
+        consultation = get_object_or_404(Consultation, pk=c_id)
 
-        Prescription.objects.create(temperature=temperature, observation=observation, consigne=consigne, patient=patient).save()
+        p = Prescription.objects.create(title=title, medecin=m, patient=patient, consultation=consultation)
+        p.consigne.add(consigne)
+        p.medications.add(med)
+        p.save()
         return redirect('dashboard_m')
     context = {
         'title': 'Ajouter Prescription',
+        'medications': med,
+        'id': p_id, 'cons': c_id,
     }
     return render(request, 'medecin/createPrescription.html', context)
 
-def readPrescription(request, prsc_title):
-    prescription = Prescription.objects.get(pk=prsc_title)
+def readPrescription(request, id):
+    prescription = Prescription.objects.get(pk=id)
     context = {
         'title': 'Afficher Prescription',
         'Prescription': prescription,
@@ -373,65 +408,54 @@ def readSante(request):
 """
 @user_passes_test(is_doctor)
 @login_required
-def creaConsultation(request):
+def creaConsultation(request, p_id, title):
+    p = get_object_or_404(Patient, pk=p_id)
+    medecin = get_object_or_404(Medecin, pk=request.user.id)
+    cS = CarnetSante.objects.get(patient=p)
     if request.method == 'POST':
         motif = request.POST.get('motif', '')
-        dignostic = request.POST.get('dignostic', '')
-        poids = float(request.POST.get('poids', ''))
-        taille = float(request.POST.get('taille', ''))
-        typeConsult = request.POST.get('typeConsult', '')
-        price = float(request.POST.get('price', ''))
-        temperature = float(request.POST.get('temperature', ''))
+        diagnostic = request.POST.get('diagnostic', '')
+        poids = request.POST.get('poids', 0)
+        taille = request.POST.get('taille', 0)
+        price = request.POST.get('price', 0)
+        temperature = request.POST.get('temperature', '')
         tension_arterielle = request.POST.get('tension_arterielle', '')
         frequence_cardiaque = request.POST.get('frequence_cardiaque', '')
         notes = request.POST.get('notes', '')
 
-        Consultation.objects.create(
+        c = Consultation.objects.create(
             motif=motif,
-            dignostic=dignostic,
+            diagnostic=diagnostic,
             poids=poids,
             taille=taille,
-            typeConsult=typeConsult,
+            medecin=medecin,
+            typeConsult="Analyse Generale",
             price=price,
+            rdv=get_object_or_404(Appointement, patient=p, medecin=medecin),
             temperature=temperature,
             tension_arterielle=tension_arterielle,
             frequence_cardiaque=frequence_cardiaque,
             notes=notes
-        ).save()
+        )
+        c.save()
+        h = Hospitalisation.objects.create(patient=p, title=title, date_admission=datetime.now(), consultation=c)
+        h.save()
+        cS.add_hosp(h)
+        return redirect('create_prsc', p_id, c.id)
     context = {
         'title': 'cree une consultation',
+        'title': title,
+        'id': p_id,
     }
-    return render(request, '', context)
+    return render(request, 'medecin/creaconsult.html', context)
 
-@user_passes_test(is_doctor)
 @login_required
-def creaConsultation(request):
-    if request.method == 'POST':
-        motif = request.POST.get('motif', '')
-        dignostic = request.POST.get('dignostic', '')
-        poids = float(request.POST.get('poids', ''))
-        taille = float(request.POST.get('taille', ''))
-        typeConsult = request.POST.get('typeConsult', '')
-        price = float(request.POST.get('price', ''))
-        temperature = float(request.POST.get('temperature', ''))
-        tension_arterielle = request.POST.get('tension_arterielle', '')
-        frequence_cardiaque = request.POST.get('frequence_cardiaque', '')
-        notes = request.POST.get('notes', '')
+def readConsult(request, c_id):
+    user = get_object_or_404(Medecin, pk=request.user.id)
+    consult = get_object_or_404(Consultation, pk=c_id)
 
-        Consultation.objects.create(
-            motif=motif,
-            dignostic=dignostic,
-            poids=poids,
-            taille=taille,
-            typeConsult=typeConsult,
-            price=price,
-            temperature=temperature,
-            tension_arterielle=tension_arterielle,
-            frequence_cardiaque=frequence_cardiaque,
-            notes=notes
-        ).save()
-        return redirect('')
-    context = {
-        'title': 'cree une consultation',
+    context ={
+        'title': 'Consultation',
+        'consultation': consult,
     }
-    return render(request, '', context)
+    return render(request, 'medecin/consultation.html', context)

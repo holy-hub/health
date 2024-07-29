@@ -1,44 +1,61 @@
-
-
-
 {% extends "medecin_base.html" %}
+{% load static %}
+
 {% block content %}
+<section class="content-header">
+    <h1>
+        Creation d'un Conseil
+        <small>Previsualisation</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Nouveau Conseil</li>
+    </ol>
+</section>
 
-<div class="box box-primary">
-    <div class="box-header">
-        <form role="form" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="box-body">
-                <div class="form-group">
-                    <label for="title">Titre:</label>
-                    <input type="text" id="title" name="title" value="{{ advice.title }}" required><br>
+<section class="content-header">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-3"></div>
+        <!-- center  column -->
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <form role="form" method="POST" action="{% url "update_adv" adv.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="title">Titre</label>
+                                <input type="text" class="form-control" id="title" name="title" value="{{ adv.title }}" placeholder="Entrer la maladie concernee ">
+                            </div>
+                            <div class="form-group">
+                                <label>Contenu</label>
+                                <textarea class="form-control" name="content" value="{{ adv.content }}" rows="3" placeholder="description du conseil ou prevention"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="ill">Maladie</label>
+                                <input type="text" class="form-control" id="ill" name="ill" value="{{ adv.ill.nom }}" placeholder="Entrer le titre ">
+                                <datalist id="illAll">
+                                    {% for ill in illness %}
+                                    <option value="{{ ill.nom }}">{{ ill.nom_scientiste|capfirst }}</option>
+                                    {% empty %}
+                                    <option value="">Aucune Maladie enregistree</option>
+                                    {% endfor %}
+                                    <option value=""><a href="{% url "create_ill" %}" class="btn btn-info nav-link"></a></option>
+                                </datalist>
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image:</label>
+                                <input type="file" id="image" name="image" value="{{ adv.image }}"><br>
+                            </div>
+                        </div><!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Modifier un conseil</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="content">Contenu:</label>
-    <textarea id="content" name="content" required>{{ advice.content }}</textarea><br>
-                </div> 
-                <div class="form-group">
-                    <label for="ill">Maladie:</label>
-    <input type="text" id="ill" name="ill" value="{{ advice.ill }}" required><br>
-                </div>
-
-                <div class="form-group">
-                    <label for="image">Image:</label>
-                    <input type="file" id="image" name="image"><br>
-                </div>
-                
-            
-            </div><!-- /.box-body -->
-
-            <div class="box-footer">
-                <button type="submit" class="btn btn-primary">Mettre à jour </button>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
-
-
+</section>
 {% endblock %}
-
-

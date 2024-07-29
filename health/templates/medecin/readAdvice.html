@@ -1,20 +1,33 @@
 {% extends "medecin_base.html" %}
+{% load static %}
+
 {% block content %}
-
-
-
-
+<section class="content-header">
+    <h1>
+        Affichage du Conseil
+        <small>Previsualisation</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{% url "readAll_adv" %}">Mes Conseils</a></li>
+        <li class="active">{{ advice.title }}</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         <div class="box box-primary">
             <div class="box-header">
-
                 <h1>{{ advice.title }}</h1>
                 <p>{{ advice.content }}</p>
-                <p>Maladie: {{ advice.ill }}</p>
-                {% if advice.image %}
-                <img src="{{ advice.image.url }}" alt="{{ advice.title }}">
+                <p><b>Maladie</b>: {{ advice.ill.nom }} / <small>{{ advice.ill.nom_scientiste }}</small></p>
+                {% if advice.image %} <img src="{{ advice.image.url }}" alt="{{ advice.image.name }}">
+                {% else %} <p>Aucune <b>IMAGE</b> enregistree</p>
                 {% endif %}
             </div>
         </div>
+    </div>
+</section>
                 
 {% endblock %}
 

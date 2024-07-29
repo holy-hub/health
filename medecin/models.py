@@ -34,7 +34,7 @@ class Advice(models.Model):
     content = models.TextField(verbose_name="Contenu du conseil")
     ill = models.OneToOneField(Maladie, verbose_name="Maladie choisie pour le conseil", on_delete=models.CASCADE)
     medecin = models.ForeignKey(Medecin, verbose_name="Medecin originaire de cette enregistrement", on_delete=models.CASCADE)
-    image = models.FileField(upload_to="image/conseils/", max_length=255)
+    image = models.FileField(upload_to="img/conseils/", max_length=255)
     is_publish = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -44,7 +44,12 @@ class Advice(models.Model):
     def publish(self):
         self.is_publish = True
         return self.is_publish
-    
+
+    def retirer(self):
+        if self.is_publish:
+            self.is_publish = False
+        return self.is_publish
+
     def archive(self):
         Archive.objects.create(content_object=self, archived_by=self.medecin).save()
         self.is_publish = False
@@ -115,7 +120,6 @@ class Chirurgie(Traitement):
 
 class Consultation(models.Model):
     medecin = models.ForeignKey(Medecin, related_name='consultation_medecin', on_delete=models.CASCADE)
-    patient = models.ForeignKey(Patient, related_name='consultation_patient', on_delete=models.CASCADE)
     date_consultation = models.DateTimeField(auto_now_add=True)
     motif = models.TextField()
     diagnostic = models.TextField()
@@ -128,20 +132,18 @@ class Consultation(models.Model):
     tension_arterielle = models.CharField(max_length=20, default=0)
     frequence_cardiaque = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
-    date_modification = models.DateTimeField(auto_now=True)
+    date_modification = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Consultation du {self.date_consultation} pour {self.patient.username} par {self.medecin.username}"
 
 class Prescription(models.Model):
     title = models.CharField(max_length=50)
-    temperature = models.PositiveSmallIntegerField(default=37)
-    observation = models.TextField(verbose_name="Observations du medecin")
-    consigne = models.ManyToManyField(Consigne, verbose_name="Les medications et leur posologie a suivre")
+    consigne = models.ManyToManyField(Consigne, verbose_name="Les medications et leur posologie a suivre", blank=True)
     patient = models.ForeignKey(Patient, related_name='prescriptions_patient', verbose_name="Patient de consultation", on_delete=models.CASCADE)
     medecin = models.ForeignKey(Medecin, related_name='prescriptions_medecin', verbose_name="Medecin de consultation", on_delete=models.CASCADE)
-    consultation = models.ForeignKey(Consultation, related_name='consultation_medecin', verbose_name="consultation du Medecin", default=None, on_delete=models.CASCADE)
-    medications = models.ManyToManyField(Medication, verbose_name="medicaments de prescription", default=None)
+    consultation = models.ForeignKey(Consultation, related_name='consultation_medecin', blank=True, verbose_name="consultation du Medecin", default=None, on_delete=models.CASCADE)
+    medications = models.ManyToManyField(Medication, verbose_name="medicaments de prescription", blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -159,19 +161,14 @@ class Prescription(models.Model):
 
 class Hospitalisation(models.Model):
     title = models.CharField(max_length=50, default="Facture")
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    consultation = models.ForeignKey(Consultation, default=None, blank=True, on_delete=models.CASCADE)
+    traitements = models.ManyToManyField(Traitement, verbose_name="", blank=True, default=None)
     date_admission = models.DateTimeField()
     motif_admission = models.TextField()
-    accompagnant = models.CharField(max_length=50)
-    tel_accompagnant = models.CharField(max_length=50)
     date_entree = models.DateTimeField(auto_now_add=True)
-    date_sortie = models.DateTimeField()
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    date_resultats = models.DateTimeField(auto_now=True)
     resultats = models.CharField(max_length=255)
-    date_resultats = models.DateTimeField()
-    traitements = models.ManyToManyField(Traitement, verbose_name="")
-    cause_deces = models.CharField(max_length=50)
-    consultation = models.ForeignKey(Consultation, default=None, on_delete=models.CASCADE)
-    date_deces = models.DateTimeField()
 
     def __str__(self):
         return self.title
@@ -202,7 +199,7 @@ class Facture(models.Model):
         """
 
 class CarnetSante(models.Model):
-    patient = models.ForeignKey(Patient, related_name="patient_carnet", default=None, verbose_name="Carnet_patient", on_delete=models.CASCADE)
+    patient = models.OneToOneField(Patient, related_name="patient_carnet", default=None, verbose_name="Carnet_patient", on_delete=models.CASCADE)
     hospitalisations = models.ManyToManyField(Hospitalisation, related_name='hospitalisation_patient_carnetSante')
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)

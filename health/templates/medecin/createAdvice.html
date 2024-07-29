@@ -1,52 +1,66 @@
-
-
 {% extends "medecin_base.html" %}
+{% load static %}
 
 {% block content %}
 <section class="content-header">
     <h1>
-        Advanced Form Elements
-        <small>Preview</small>
+        Creation d'un Conseil
+        <small>Previsualisation</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Forms</a></li>
-        <li class="active">Advanced Elements</li>
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Nouveau Conseil</li>
     </ol>
 </section>
-<>
-    <div class="box box-primary">
-        <div class="box-header">
-            <form role="form" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="box-body">
-                    <div class="form-group">
-                        <label for="title">Titre</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="Entrer le titre ">
-                    </div>
-                    <div class="form-group">
-                        <label for="content">Contenu:</label>
-                        <textarea id="content" name="content" ></textarea><br>        
-                    </div> 
-                    <div class="form-group">
-                        <label for="ill">Maladie:</label>
-                        <input type="text" id="ill" name="ill" placeholder="Entrer La Maladie">
-                    </div>
 
-                    <div class="form-group">
-                        <label for="image">Image:</label>
-                        <input type="file" id="image" name="image"><br>
+<section class="content-header">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-3"></div>
+        <!-- center  column -->
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <form role="form" method="POST" action="{% url "create_adv" %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="title">Titre</label>
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Entrer la maladie concernee ">
+                            </div>
+                            <div class="form-group">
+                                <label>Contenu</label>
+                                <textarea class="form-control" name="content" rows="3" placeholder="description du conseil ou prevention"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="ill">Maladie</label>
+                                <input type="text" class="form-control" id="ill" name="ill" placeholder="Entrer le titre ">
+                                <datalist id="illAll">
+                                    {% for ill in illness %}
+                                    <option value="{{ ill.nom }}">{{ ill.nom_scientiste|capfirst }}</option>
+                                    {% empty %}
+                                    <option value="">Aucune Maladie enregistree</option>
+                                    {% endfor %}
+                                    <option value=""><a href="{% url "create_ill" %}" class="btn btn-info nav-link"></a></option>
+                                </datalist>
+                            </div>
 
-                    </div>
-                    
-                
-                </div><!-- /.box-body -->
+                            <div class="form-group">
+                                <label for="image">Image:</label>
+                                <input type="file" id="image" name="image"><br>
 
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-primary">Ajouter un conseil</button>
+                            </div>
+                            
+                        
+                        </div><!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Ajouter un conseil</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-
+</section>
 {% endblock %}

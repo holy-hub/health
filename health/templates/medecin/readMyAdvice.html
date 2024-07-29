@@ -1,0 +1,74 @@
+{% extends "medecin_base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="content-header">
+    <h1>
+        Creation d'un Conseil
+        <small>Previsualisation</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url "home" %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Nouveau Conseil</li>
+    </ol>
+</section>
+
+<section class="content-header">
+    <h4 class="page-header">
+        Mes Conseils
+        <small>Liste de conseil que j'ai cree . . .</small>
+    </h4>
+    <div class="row">
+        {% for adv in advices %}
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>
+                        {{ adv.title|title }}
+                    </h3>
+                    <p>
+                        <pre>
+                            <u><b>Maladies</b>:</u> {{ adv.ill.nom }} \ <small> {{ adv.ill.nom_scientiste }}</small>
+                            {{ adv.content }}
+                        </pre>
+                        <div class="pull-right">{{ adv.medecin.last_name|capfirst }} {{ adv.medecin.first_name|upper }}</div>
+                    </p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="{% url "read_adv" adv.id %}" class="small-box-footer">Savoir Plus<i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+            {% if adv.is_publish %} <button class="btn btn-primary" onclick="{{ adv.publish() }}">Archiver</button>
+            {% else %} <button class="btn btn-primary" onclick="{{ adv.retirer() }}">Publier</button>
+            {% endif %}
+        </div><!-- ./col -->
+        {% empty %}
+        <div class="col-lg-6 d-block m-auto">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>
+                        Comment eviter le paludisme ?
+                    </h3>
+                    <p>
+                        <pre>
+                            <u>Maladie</u>: Paludisme \ <small>Malaria</small>
+                            Le paludisme est une maladie infectieuse transmise par les moustiques qui affecte les vertébrés. Chez l'homme, le paludisme provoque des symptômes tels que de la fièvre, de la fatigue, des vomissements et des maux de tête. Dans les cas les plus graves, elle peut provoquer une jaunisse, des convulsions, le coma ou la mort.
+                        </pre>
+                        <div class="pull-right">John DOE</div>
+                    </p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">En Savoir Plus<i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
