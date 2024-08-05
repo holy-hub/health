@@ -18,12 +18,7 @@ SECRET_KEY = 'django-insecure-mum0$ve^y$4jt_a)h4m6q8w38d8cz4^9d&n+)72u0kb7b00v&1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
-
-# Définition des gestionnaires d'erreur
-handler404 = 'health.views.custom_404'
-handler500 = 'health.views.custom_500'
 
 # Application definition
 INSTALLED_APPS = [

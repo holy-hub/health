@@ -15,10 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf.urls.static import static
+from django.conf.urls import handler404, handler500
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from .views import *
+
+# Définition des gestionnaires d'erreur
+handler404 = 'health.views.custom_404'
+handler500 = 'health.views.custom_500'
 
 urlpatterns = [
     path('health/healthy/', admin.site.urls),
