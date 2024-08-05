@@ -16,8 +16,10 @@
                 {% endif %}
                 <small class="">prix: {{ med.prix }} F CFA</small>
             </div>
-            {% empty %} <center>Aucune donnees enregistrées</center>
+            {% empty %} <center>Aucun Medicaments enregistrées</center>
+            {% if request.user.is_pharmacien %}
             <button class="btn btn-info d-block m-auto mt-4"><a href="{% url "create_medoc" %}" class="nav-link"><i class="fa fa-plus-square"> Ajouter</i></a></button>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

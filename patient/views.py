@@ -64,17 +64,9 @@ def ask_appointement(request, id):
     if request.method == 'POST':
         medecin = Medecin.objects.get(pk=id)
         patient = Patient.objects.get(pk=request.user.id)
-        Appointement.objects.create(patient=patient, medecin=medecin)
-        messages.success(request, "Demande envoyee avec succes.")
-    return redirect('all_medecin')
-
-@login_required
-def motif(request):
-    if request.method == 'POST':
-        patient = get_object_or_404 (Patient, pk=request.user.id)
-        rdv = Appointement.objects.filter(patient=patient).last()
         motif = request.POST.get('motif')
-        rdv.motif = motif
+        Appointement.objects.create(patient=patient, medecin=medecin, motif=motif, is_send=True).save()
+        messages.success(request, "Demande envoyee avec succes.")
         return redirect('dashboard_p')
     return redirect('all_medecin')
 

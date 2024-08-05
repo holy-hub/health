@@ -28,3 +28,17 @@ def coming_soon(request):
         'title': 'Coming Soon !!!',
     }
     return render(request, 'coming_soon.html', context)
+
+def custom_404(request, exception=None):
+    context = {
+        'title': 'PAGE NON TROUVEE',
+        'base': 'medecin_base.html' if request.user.is_medecin else 'pharmacien_base.html' if request.user.is_pharmacien else 'patient_base.html',
+    }
+    return render(request, '404.html', context, status=404)
+
+def custom_500(request):
+    context = {
+        'title': 'ERRUR DE SERVEUR',
+        'base': 'medecin_base.html' if request.user.is_medecin else 'pharmacien_base.html' if request.user.is_pharmacien else 'patient_base.html',
+    }
+    return render(request, '500.html', context, status=500)

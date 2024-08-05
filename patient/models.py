@@ -17,6 +17,7 @@ class Appointement(models.Model):
     date_rdv = models.DateTimeField(blank=True, null=True)
     motif = models.CharField(max_length=250, default="Mal a l'aise")
     create_at = models.DateTimeField(auto_now_add=True)
+    is_send = models.BooleanField(default=False)
     status = models.CharField(max_length=50, choices=STATUS_CHOICE, default=STATUS_CHOICE[3][1])
     reminder_sent = models.BooleanField(default=False)
 

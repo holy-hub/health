@@ -36,4 +36,5 @@ urlpatterns = [
     path('carnet-sante/read/', readSante, name='my_Sante'),
     path('consultation/<int:p_id>/create/<str:title>/', creaConsultation, name='creaConsultation'),
     path('consultation/read/', readConsult, name='readConsultation'),
+    path('consultation/delete/<int:id>/', delConsultation, name='delConsultation'),
 ]

@@ -51,6 +51,7 @@
                 <th>Mobile</th>
                 <th>adresse</th>
                 <th>email</th>
+                <th></th>
                 <th>prendre rendez-vous</th>
               </tr>
             </thead>
@@ -63,41 +64,16 @@
                 <td>{{ med.mobile }}</td>
                 <td>{{ med.address }}</td>
                 <td>{{ med.email }}</td>
-                <td>
-                  <form action="{% url "ask_appointement" med.id %}" method="post">
-                    {% csrf_token %}
-                    <button class="btn btn-info" title="Prise de rendez-vous" data-bs-toggle="modal"
-                      data-bs-target="#myModal{{ forloop.counter }}"><i class="fa fa-user"></i></button>
-                  </form>
-                </td>
+                <form action="{% url "ask_appointement" med.id %}" method="post">
+                  {% csrf_token %}
+                  <td>
+                    <input type="text" class="form-control" name="motif" placeholder="motif" required>
+                  </td>
+                  <td>
+                      <button class="btn btn-info" title="Prise de rendez-vous"><i class="fa fa-user"></i></button>
+                  </td>
+                </form>
               </tr>
-              <!-- The Modal -->
-              <div class="modal" id="myModal{{ forloop.counter }}">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                      <h4 class="modal-title">Motif</h4>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                      <form action="{% url "motif" %}" method="post">
-                        {% csrf_token %}
-                        <input type="text" name="motif" placeholder="motif">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                      </form>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
               {% empty %}
               <tr>
                 <td>0</td>
@@ -118,6 +94,7 @@
                 <th>Mobile</th>
                 <th>adresse</th>
                 <th>email</th>
+                <th></th>
                 <th>prendre rendez-vous</th>
               </tr>
             </tfoot>
@@ -145,17 +122,21 @@
 
 <!-- page script -->
 <script type="text/javascript">
-  $(function () {
-    $('#example1').dataTable()
-    $('#example2').dataTable({
-      bPaginate: true,
-      bLengthChange: false,
-      bFilter: false,
-      bSort: true,
-      bInfo: true,
-      bAutoWidth: false
-    })
+  $(document).ready(function() {
+    $(function () {
+      $('#example1').dataTable()
+      $('#example2').dataTable({
+        bPaginate: true,
+        bLengthChange: false,
+        bFilter: false,
+        bSort: true,
+        bInfo: true,
+        bAutoWidth: false
+      })
+    });
+    $('button')
   })
+
 </script>
 {% endblock %}
 

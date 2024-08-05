@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -10,8 +11,8 @@ from .models import *
 @login_required
 def dashboard(request):
     medecin = get_object_or_404(Medecin, id=request.user.id)
-    rdvs = Appointement.objects.filter(medecin=medecin, status='EN ATTENTE').all()
-    rdva = Appointement.objects.filter(medecin=medecin, status='ACCEPTÉ').all()
+    rdvs = Appointement.objects.filter(medecin=medecin, is_send=False, status='EN ATTENTE').all()
+    rdva = Appointement.objects.filter(medecin=medecin, is_send=False, status='ACCEPTÉ').all()
     context = {
         'title': 'Medecin ' + medecin.username,
         'rdvs': rdvs,
@@ -264,15 +265,16 @@ def creaPrescription(request, p_id, c_id):
     med = Medication.objects.all()
     if request.method == 'POST':
         title = request.POST.get('title', '')
-        consigne = request.POST.get('consigne', None)
+        # consigne = request.POST.get('consigne', None)
         med = request.POST.get('medication', None)
         patient = get_object_or_404(Patient, pk=p_id)
         m = get_object_or_404(Medecin, pk=request.user.id)
         consultation = get_object_or_404(Consultation, pk=c_id)
 
         p = Prescription.objects.create(title=title, medecin=m, patient=patient, consultation=consultation)
-        p.consigne.add(consigne)
-        p.medications.add(med)
+        # p.consigne.add(consigne)
+        if med:
+            p.medications.add(med)
         p.save()
         return redirect('dashboard_m')
     context = {
@@ -422,6 +424,13 @@ def creaConsultation(request, p_id, title):
         tension_arterielle = request.POST.get('tension_arterielle', '')
         frequence_cardiaque = request.POST.get('frequence_cardiaque', '')
         notes = request.POST.get('notes', '')
+        try:
+            rdv = get_object_or_404(Appointement, patient=p, medecin=medecin)
+        except Appointement.DoesNotExist:
+            rdv = None
+            raise Http404("Rendez-vous non trouvé")
+        except Appointement.MultipleObjectsReturned:
+            rdv = Appointement.objects.get(patient=p, medecin=medecin).last()
 
         c = Consultation.objects.create(
             motif=motif,
@@ -431,7 +440,7 @@ def creaConsultation(request, p_id, title):
             medecin=medecin,
             typeConsult="Analyse Generale",
             price=price,
-            rdv=get_object_or_404(Appointement, patient=p, medecin=medecin),
+            rdv=rdv,
             temperature=temperature,
             tension_arterielle=tension_arterielle,
             frequence_cardiaque=frequence_cardiaque,
@@ -459,3 +468,10 @@ def readConsult(request, c_id):
         'consultation': consult,
     }
     return render(request, 'medecin/consultation.html', context)
+
+def delConsultation(request, id):
+    s = Consultation.objects.get(pk=id)
+    a = Archive.objects.create(content_object=s.id, archived_by=request.user.id)
+    a.save()
+    s.delete()
+    return redirect('dashboard_m')

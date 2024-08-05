@@ -26,6 +26,8 @@ urlpatterns = [
     path('health/setting/', setting, name='setting'),
     path('health/calendar/', calendar, name='calendar'),
     path('health/coming-soon/', coming_soon, name='coming_soon'),
+    path('health/page/not-found/', custom_404),
+    path('health/page/error-server/', custom_500),
     path('accounts/', include('authentification.urls')),
     path('medecin/', include('medecin.urls')),
     path('patient/', include('patient.urls')),

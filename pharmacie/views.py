@@ -1,9 +1,9 @@
-import random
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 
 from authentification.models import Archive, Pharmacien, Utilisateur
 from .models import *
+import random
 
 # Create your views here.
 def is_patient(user):

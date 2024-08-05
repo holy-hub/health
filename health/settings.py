@@ -21,6 +21,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Définition des gestionnaires d'erreur
+handler404 = 'health.views.custom_404'
+handler500 = 'health.views.custom_500'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

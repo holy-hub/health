@@ -77,7 +77,7 @@ def log_on_sante(request):
         if status == 'medecin':
             medoc = Medecin.objects.create(username=username, password=password)
             medoc.save()
-        elif status == 'pharmacien':
+        else:
             pharm = Pharmacien.objects.create(username=username, password=password)
             pharm.save()
         return redirect('check_status', username, status)
