@@ -22,8 +22,8 @@ from django.urls import path, include
 from .views import *
 
 # Définition des gestionnaires d'erreur
-handler404 = 'health.views.custom_404'
-handler500 = 'health.views.custom_500'
+handler404 = custom_404
+handler500 = custom_500
 
 urlpatterns = [
     path('health/healthy/', admin.site.urls),

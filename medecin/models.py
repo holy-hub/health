@@ -34,12 +34,12 @@ class Advice(models.Model):
     content = models.TextField(verbose_name="Contenu du conseil")
     ill = models.OneToOneField(Maladie, verbose_name="Maladie choisie pour le conseil", on_delete=models.CASCADE)
     medecin = models.ForeignKey(Medecin, verbose_name="Medecin originaire de cette enregistrement", on_delete=models.CASCADE)
-    image = models.FileField(upload_to="img/conseils/", max_length=255)
+    image = models.FileField(upload_to="Medecin/conseils/", max_length=255)
     is_publish = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Intitulé {self.title} portant sur la maladie {self.ill}."
+        return f"Intitulé {self.title} portant sur la maladie {self.ill.nom}."
 
     def publish(self):
         self.is_publish = True
@@ -112,7 +112,7 @@ class Traitement(models.Model):
 class ExamenBiologique(Traitement):
     designation = models.CharField(max_length=250)
     resultat_examen = models.TextField()
-    image = models.ImageField(upload_to='health/radiology/')
+    image = models.ImageField(upload_to='Medecin/radiology/')
 
 class Chirurgie(Traitement):
     chirurgien = models.CharField(max_length=50)

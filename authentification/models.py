@@ -17,7 +17,7 @@ class Utilisateur(User):
     sexe = models.CharField(max_length=20, choices=SEX_CHOICES, default=SEX_CHOICES[0][0])
     address = models.CharField(max_length=20, default="")
     deleted = models.BooleanField(default=False)
-    image = models.FileField(upload_to="static/adminLTE/img/profile/", max_length=255, blank=True, default="static/adminLTE/img/avatar5.png")
+    image = models.FileField(upload_to="profile/", max_length=255, blank=True, default="static/adminLTE/img/avatar5.png")
     is_patient = models.BooleanField(default=True)
     is_medecin = models.BooleanField(default=False)
     is_pharmacien = models.BooleanField(default=False)
@@ -57,7 +57,7 @@ class Patient(Utilisateur):
         return f"Patient { self.first_name }"
 
 class Pharmacien(Utilisateur):
-    preuvePharmacien = models.FileField(upload_to="health/static/Pharmacien/")
+    preuvePharmacien = models.FileField(upload_to="Pharmacien/")
     pharmacie = models.ForeignKey(Pharmacie, verbose_name="Pharmacie", related_name="pharmacien", null=True, on_delete=models.CASCADE)
     approuverPharmacien =  models.BooleanField(default=False, verbose_name="Validation du pharmacien")
     verifierPharmacien =  models.BooleanField(default=False, verbose_name="verification du pharmacien")
@@ -70,7 +70,7 @@ class Pharmacien(Utilisateur):
         super().save(*args, **kwargs)
 
 class Medecin(Utilisateur):
-    preuveMedecin = models.FileField(upload_to='health/static/Medecin/')
+    preuveMedecin = models.FileField(upload_to='Medecin/')
     speciality = models.ForeignKey("medecin.Speciality", verbose_name="Specialite du medecin", null=True, on_delete=models.CASCADE)
     approuverMedecin = models.BooleanField(default=False, verbose_name="Validation du medecin")
     verifierMedecin = models.BooleanField(default=False, verbose_name="verification du medecin")

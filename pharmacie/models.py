@@ -35,7 +35,7 @@ class Maladie(models.Model):
 class Medication(models.Model):
     nom = models.CharField(max_length=250, unique=True)
     prix = models.PositiveIntegerField(default=0)
-    image = models.FileField(upload_to="image/produits/", max_length=255, blank=True)
+    image = models.FileField(upload_to="Pahrmacien/produits/", max_length=255, blank=True)
     avantages = models.TextField(default="", max_length=255)
     inconvenients = models.TextField(default="", max_length=255)
 
